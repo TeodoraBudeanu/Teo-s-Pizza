@@ -1,0 +1,59 @@
+div.menubutton {
+  padding-top: 6px;
+  width: 35px;
+  height: 5px;
+  background-color: black;
+  margin: 6px 12px;
+}
+body {
+  text-align: left;
+  background: url(../img/bg1.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+
+.navbar.transparent{
+  padding:10px;
+  background: rgba(255, 255, 255, 0.3);
+  font-family: "Marker Felt";
+  font-size: 35px;
+}
+
+.nav-link{
+  font-size: 150%;
+}
+
+.navbar-brand{
+  color:black;
+  font-size:170%;
+}
+
+.container{
+
+  width:500px;
+  padding: 50px;
+  font-family: "Chalkduster";
+  font-size: 200%;
+}
+
+.container-bg {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.dropdown {
+  padding-right: 30px;
+}
+
+h1 {
+  font-size: 50px;
+}
+
+h4 {
+  font-size: 30px;
+}
+
+p {
+  font-size: 20px;
+}

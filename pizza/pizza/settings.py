@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pizza',
     'client',
-    'crispy_forms'
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -121,8 +122,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-LOGIN_REDIRECT_URL="player_home"
-LOGOUT_REDIRECT_URL="tictactoe_welcome"
-LOGIN_URL="player_login"
+LOGIN_REDIRECT_URL="client_home"
+LOGOUT_REDIRECT_URL="welcome"
+LOGIN_URL="client_login"
 
-CRISPY_TEMPLATE_PACK='bootstrap3'
+CRISPY_TEMPLATE_PACK='bootstrap4'

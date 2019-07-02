@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+  Login
+{% endblock %}
+
+{% block styling %}
+  <link rel="stylesheet" href="/static/css/loginpagestyle.css">
+    <style>
+      body {
+          padding-top: 200px;
+          padding-bottom: 20px;
+        }
+    </style>
+{% endblock styling %}
+
+{% block content %}
+
+  <form role="form" action="{% url 'client_login' %}" method="post">
+    {% csrf_token %}
+
+    <p>Please login.</p>
+
+    {{ form | crispy }}
+
+    <button type="submit" class="btn btn-success">Sign in</button>
+
+  </form>
+
+  {% endblock %}

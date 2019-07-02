@@ -5,5 +5,33 @@
 {% endblock title %}
 
 {% block content %}
+<h1>Your order has been placed.</h1>
 
+<ul class="list-group list-group-flush">
+  <label for="li1">Email</label>
+  <li id="li1" class="list-group-item">
+    <script class="list-group-item" type="text/javascript">
+    document.getElementById("li1").innerHTML = email;
+  </script></li>
+  <label for="li2">Address</label>
+  <li id="li2" class="list-group-item">
+    <script class="list-group-item" type="text/javascript">
+    document.getElementById("li2").innerHTML = address;
+  </script></li>
+  <label for="li3">Pizza Type</label>
+  <li id="li3" class="list-group-item">
+    <script class="list-group-item" type="text/javascript">
+    document.getElementById("li3").innerHTML = pizzatype;
+  </script></li>
+  <label for="li4">Quantity</label>
+  <li id="li4" class="list-group-item">
+    <script class="list-group-item" type="text/javascript">
+    document.getElementById("li4").innerHTML = quantity;
+  </script></li>
+  <label for="li5">Comment</label>
+  <li id="li5" class="list-group-item">
+    <script class="list-group-item" type="text/javascript">
+    document.getElementById("li5").innerHTML = comment;
+  </script></li>
+</ul>
 {% endblock %}
