@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'pizza',
     'client',
     'crispy_forms',
+    'order',
 ]
 
 MIDDLEWARE = [
