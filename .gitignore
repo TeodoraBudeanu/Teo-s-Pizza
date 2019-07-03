@@ -103,4 +103,4 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-django/.DS_Store
+.DS_Store
