@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.urls import reverse
 # Create your models here.
 
 class Pizza(models.Model):
@@ -8,27 +9,29 @@ class Pizza(models.Model):
     description = models.TextField()
     price = models.IntegerField(validators=[MinValueValidator(0),
                                             MaxValueValidator(30)])
+    def __str__(self):
+        return self.name
 
 class OrdersQuerySet(models.QuerySet):
     def orders_from_user(self, user):
         return self.filter(user_email=user.email)
 
 class Order(models.Model):
-    user_email = models.ForeignKey(User, on_delete=models.CASCADE,
-                                                editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     address = models.CharField(max_length = 30)
-    comment = models.TextField()
+    comment = models.TextField(blank=True)
     objects = OrdersQuerySet.as_manager()
 
     def get_amount(self):
     #    return sum([ol.amount for ol in self.order_items.all()])
-
         return sum([Pizza.objects.get(pk=ol.pizza_type).price for ol in self.order_items.all()])
 
+    def get_absolute_url(self):
+        return reverse('order_summary', args=[self.id])
+
 class OrderItem(models.Model):
-    pizza_type = models.ForeignKey(Pizza, on_delete=models.CASCADE,
-                                                editable=False)
+    pizza_type = models.ForeignKey(Pizza, on_delete=models.CASCADE)
     quantity = models.IntegerField(validators=[MinValueValidator(0),
                                             MaxValueValidator(10)])
     order = models.ForeignKey(Order, related_name='order_items',
-                                    on_delete=models.CASCADE)
+                                    on_delete=models.CASCADE, editable=False)

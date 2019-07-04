@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+  Place your order at Teo's Pizza
+{% endblock title %}
+
+{% block styling %}
+{{ block.super }}
+
+<style>
+  .container   {
+    margin-top: 80px;
+    font-family: "Chalkduster";
+    font-size: 150%;
+    max-width:750px;
+    background: rgba(255, 255, 255, 0.3) };
+  }
+
+  </style>
+{% endblock styling %}
+
+{% block content %}
+<form role="form" action="{% url 'place_order' %}" method="post">
+  {% csrf_token %}
+  {{ formOrder | crispy }}
+  {{ formOrderItem | crispy}}
+  <button name="submit" class="btn btn-primary" id="yw1" type="submit">Pay & Send Order</button><br><br>
+</form>
+
+{% endblock %}
