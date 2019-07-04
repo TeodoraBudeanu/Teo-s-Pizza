@@ -31,6 +31,8 @@ def place_order(request):
 @login_required
 def order_summary(request, id):
     order = get_object_or_404(Order, pk=id)
+    order_items = OrderItem.objects.all().filter(order=order)
     if not request.user == order.user:
         raise PermissionDenied
-    return render(request, "orders/order_summary.html", {'order': order})
+    return render(request, "orders/order_summary.html", {'order': order,
+                                                'order_items': order_items})

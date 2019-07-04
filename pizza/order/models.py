@@ -16,6 +16,9 @@ class OrdersQuerySet(models.QuerySet):
     def orders_from_user(self, user):
         return self.filter(user_email=user.email)
 
+    def order_items_for_order(self):
+        return self.order_items.all()
+
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     address = models.CharField(max_length = 30)
@@ -24,10 +27,12 @@ class Order(models.Model):
 
     def get_amount(self):
     #    return sum([ol.amount for ol in self.order_items.all()])
-        return sum([Pizza.objects.get(pk=ol.pizza_type).price for ol in self.order_items.all()])
+        return sum([Pizza.objects.get(pk=ol.pizza_type.id).price for ol in self.order_items.all()])
 
     def get_absolute_url(self):
         return reverse('order_summary', args=[self.id])
+
+
 
 class OrderItem(models.Model):
     pizza_type = models.ForeignKey(Pizza, on_delete=models.CASCADE)

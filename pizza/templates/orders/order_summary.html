@@ -4,10 +4,43 @@
   Order summary
 {% endblock title %}
 
+{% block styling %}
+{{ block.super }}
+
+<style>
+  .container   {
+    margin-top: 80px;
+    font-family: "Chalkduster";
+    font-size: 150%;
+    max-width:750px;
+    background: rgba(255, 255, 255, 0.3) };
+  }
+
+  </style>
+
+{% endblock styling %}
+
 {% block content %}
 
 <h1>Your order has been placed.</h1>
-{{ order.id }}
+
+  <ul class="list-group list-group-flush">
+    <label for="li1">Email</label>
+    <li id="li1" class="list-group-item">{{ order.user.email }}</li>
+    <label for="li2">Address</label>
+    <li id="li2" class="list-group-item">{{ order.address }}</li>
+    {% for ol in order_items %}
+      <label for="li3">Pizza Type</label>
+      <li id="li3" class="list-group-item">{{ ol.pizza_type.name }}</li>
+      <label for="li4">Quantity</label>
+      <li id="li4" class="list-group-item">{{ ol.quantity }}</li>
+    {% endfor %}
+    <label for="li5">Comment</label>
+    <li id="li5" class="list-group-item">{{ order.comment }}</li>
+  </ul>
+
+
+
 
 
 {% endblock %}
