@@ -1,0 +1,19 @@
+{% extends 'pizza_details_base.html' %}
+
+{% block styling %}
+background: url(/static/img/{{ pizza.img_url }}) no-repeat center center fixed;
+{% endblock styling %}
+
+{% block title %}
+  {{ pizza.name }}
+{% endblock title %}
+
+{% block content %}
+
+<h1>  {{ pizza.name }}</h1>
+<h4>Description:</h4>
+<p>{{ pizza.description }}</p>
+<h1 class="price">Price: {{ pizza.price }} &euro</h1>
+
+
+  {% endblock %}

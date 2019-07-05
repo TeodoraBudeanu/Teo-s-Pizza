@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 
 from .forms import OrderForm, OrderItemForm
-from .models import Order, OrderItem
+from .models import Order, OrderItem, Pizza
 
 # Create your views here.
 @login_required
@@ -36,3 +36,7 @@ def order_summary(request, id):
         raise PermissionDenied
     return render(request, "orders/order_summary.html", {'order': order,
                                                 'order_items': order_items})
+
+def pizza_details(request, id):
+    pizza = get_object_or_404(Pizza, pk=id)
+    return render(request, "orders/pizza_details.html", {'pizza': pizza})

@@ -9,8 +9,13 @@ class Pizza(models.Model):
     description = models.TextField()
     price = models.IntegerField(validators=[MinValueValidator(0),
                                             MaxValueValidator(30)])
+    img_url = models.CharField(max_length = 50, default = "bg1.jpg")
+
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('pizza_details', args=[self.id])
 
 class OrdersQuerySet(models.QuerySet):
     def orders_from_user(self, user):
