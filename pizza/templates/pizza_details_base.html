@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  {% block styling %}
   <style>
 div.menubutton {
   padding-top: 6px;
@@ -17,9 +18,7 @@ div.menubutton {
 }
 
 body {
-    {% block styling %}
   background: url(/static/img/bg1.jpg) no-repeat center center fixed;
-    {% endblock styling %}
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
@@ -64,6 +63,8 @@ p {
 }
 
 </style>
+    {% endblock styling %}
+    
   <title>{% block title %}{% endblock %}</title>
 </head>
 

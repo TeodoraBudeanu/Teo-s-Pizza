@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.forms import modelformset_factory
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
 
 from .forms import OrderForm, OrderItemForm
 from .models import Order, OrderItem, Pizza
@@ -10,23 +14,42 @@ from .models import Order, OrderItem, Pizza
 def place_order(request):
     if request.method == "POST":
         form = OrderForm(request.POST)
-        form2 = OrderItemForm(request.POST)
+        OrderItemFormSet = modelformset_factory(OrderItem, exclude=())
+        formset = OrderItemFormSet(request.POST, request.FILES)
 
-        if (form.is_valid() and form2.is_valid()):
+        if (form.is_valid() and formset.is_valid()):
             order = form.save()
-            orderItem = OrderItem(order=order)
-            form2 = OrderItemForm(instance=orderItem, data=request.POST)
-            form2.save()
+            instances = formset.save(commit=False)
+            for i in instances:
+                i.order=order
+            formset.save()
             return redirect(order)
     else:
         order = Order(user=request.user)
         form = OrderForm(instance=order)
 
         orderItem = OrderItem(order=order)
-        form2 = OrderItemForm(instance=orderItem)
+        itemsForm = OrderItemForm(instance=orderItem)
+
+        OrderItemFormSet = modelformset_factory(OrderItem, exclude=(), extra=2)
+        formset = OrderItemFormSet(queryset=OrderItem.objects.none())
 
     return render(request, "orders/order_form.html", {'formOrder' : form,
-                                        'formOrderItem': form2})
+                                        'formSetOrderItem': formset})
+
+@login_required
+@csrf_exempt
+def get_price(request):
+    if request.method == "GET":
+        pizza_name = request.GET.get('name')
+        if (pizza_name == '---------'):
+            return HttpResponse("0");
+        pizza = get_object_or_404(Pizza, name= pizza_name)
+        print(pizza.price)
+        return HttpResponse(pizza.price)
+    else:
+        return HttpResponse("Request method is not a GET")
+
 
 @login_required
 def order_summary(request, id):

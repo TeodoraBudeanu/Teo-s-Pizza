@@ -9,7 +9,7 @@ class OrderItemForm(ModelForm):
         super(OrderItemForm, self).__init__(*args, **kwargs)
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
-            self.fields['user_email'].widget.attrs['readonly'] = True
+            self.fields['user'].widget.attrs['readonly'] = True
 
     class Meta:
         model = OrderItem
