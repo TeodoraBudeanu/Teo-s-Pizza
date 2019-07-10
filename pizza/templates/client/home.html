@@ -1,1 +1,40 @@
 {% extends "base.html" %}
+
+{% block styling %}
+{{ block.super }}
+<style media="screen">
+
+.container{
+  margin-top: 100px;
+  padding: 30px;
+  font-family: "Chalkduster";
+  max-width: 800px;
+}
+
+.container-bg {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.list-group-item {
+background-color: rgba(255, 255, 255, 0.3);
+border-top: 1px solid #ddd;
+border-radius: 0;
+}
+</style>
+{% endblock styling %}
+
+{% block title %}
+Home: {{ user.username }}
+{% endblock %}
+
+{% block content %}
+  {% if orders %}
+  <h1>Order History</h1>
+    <div class="list-group">
+      {% for order in orders %}
+        <a class="list-group-item"
+            href="{{ order.get_absolute_url }}">{{ order }}</a>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

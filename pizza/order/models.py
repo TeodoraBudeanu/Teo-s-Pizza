@@ -18,8 +18,8 @@ class Pizza(models.Model):
         return reverse('pizza_details', args=[self.id])
 
 class OrdersQuerySet(models.QuerySet):
-    def orders_from_user(self, user):
-        return self.filter(user_email=user.email)
+    def orders_for_client(self, user):
+        return self.filter(user=user)
 
     def order_items_for_order(self):
         return self.order_items.all()
@@ -29,6 +29,10 @@ class Order(models.Model):
     address = models.CharField(max_length = 30)
     comment = models.TextField(blank=True)
     objects = OrdersQuerySet.as_manager()
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return "Order {} - {}".format(self.id, self.date)
 
     def get_amount(self):
     #    return sum([ol.amount for ol in self.order_items.all()])
@@ -36,7 +40,6 @@ class Order(models.Model):
 
     def get_absolute_url(self):
         return reverse('order_summary', args=[self.id])
-
 
 
 class OrderItem(models.Model):
