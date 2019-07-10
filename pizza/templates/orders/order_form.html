@@ -26,6 +26,9 @@
 {{ block.super }}
 <script type="text/javascript">
   $(document).ready(function(){
+
+    $('button').prop('disabled', true);
+
     $(".form-row").change(function(){
       calculate_total();
     });
@@ -37,25 +40,30 @@
         var pizza = $(this).find(".select :selected").text();
         var quantity = $(this).find("input").val();
 
-        console.log(price, pizza, quantity);
-
-        if (pizza!="---------" && quantity>0){
-          $.ajax({
-            type:"GET",
-            url: "{% url 'get_price' %}",
-            data: { name: pizza },
-            async: true,
-            datatype: "text",
-            success: function(data){
-              total = total + data * quantity;
-              $("#output1").val(total);
-            }})};
+        if (!quantity>0){
+          $("#output1").val(total);
+          if ($("#output1").val()==0){
+            $('button').prop('disabled', true);
+          };
+        }
+        else if (pizza!="---------" && quantity>0){
+            $.ajax({
+              type:"GET",
+              url: "{% url 'get_price' %}",
+              data: { name: pizza },
+              async: true,
+              datatype: "text",
+              success: function(data){
+                total = total + data * quantity;
+                $("#output1").val(total);
+                if ($("#output1").val()>0) {
+                  $('button').prop('disabled', false);
+                }
+              }})};
         });
     };
   });
-
-
-</script>
+ </script>
 {% endblock %}
 
 {% block content %}
@@ -73,11 +81,13 @@
     </div>
   </div>
   {% endfor %}
+
+
   <div class="form-group">
-         <label for="output1" style="color:tomato">To pay</label>
-         <output id="output1" class="form-control"></output>
-       </div>
-  <button name="submit" class="btn btn-primary" id="yw1" type="submit">Pay & Send Order</button><br><br>
+    <label for="output1" style="color:tomato">To pay</label>
+    <output id="output1" class="form-control"></output>
+  </div>
+  <button class="btn btn-primary" id="yw1" >Pay & Send Order</button><br><br>
 </form>
 
 {% endblock %}
