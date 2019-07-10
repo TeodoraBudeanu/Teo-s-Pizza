@@ -1,11 +1,39 @@
-{% extends 'pizza_details_base.html' %}
+{% extends 'base.html' %}
 
 {% block styling %}
 {{ block.super }}
 <style media="screen">
-body {
-  background: url(/static/img/{{ pizza.img_url }}) no-repeat center center fixed;
-}
+  body {
+    background: url(/static/img/{{ pizza.img_url }}) no-repeat center center fixed;
+    text-align: justify;
+  }
+
+  .container{
+    margin-top: 150px;
+    padding: 80px;
+    width: 1000px;
+    font-family: "Chalkduster";
+  }
+
+  .container-bg {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  h1 {
+    font-size: 50px;
+  }
+
+  h4 {
+    font-size: 30px;
+  }
+
+  p {
+    font-size: 20px;
+  }
+
+  .price{
+    color: tomato;
+  }
 </style>
 
 {% endblock styling %}
@@ -15,11 +43,19 @@ body {
 {% endblock title %}
 
 {% block content %}
+<div class="container-fluid">
+  <div class="row">
+      <h1>  {{ pizza.name }}</h1><br>
+  </div>
+<div class="row">
+    <p>{{ pizza.description }}</p>
+</div>
+<div class="row">
+    <h1 class="price">Price: {{ pizza.price }} &euro;</h1>
+</div>
 
-<h1>  {{ pizza.name }}</h1>
-<h4>Description:</h4>
-<p>{{ pizza.description }}</p>
-<h1 class="price">Price: {{ pizza.price }} &euro;</h1>
+</div>
+
 
 
   {% endblock %}

@@ -1,0 +1,7 @@
+<div class="dropdown-menu">
+    {% for pizza in pizza_list %}
+      <div class="nav-item ">
+        <a class="nav-link list-group-item list-group-item-action list-group-item-warning"
+                href="{{ pizza.get_absolute_url }}">{{ pizza.name }}</a></div>
+    {% endfor %}
+ </div>
