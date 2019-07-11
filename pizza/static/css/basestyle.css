@@ -9,6 +9,7 @@ body {
   color: black;
   text-align: center;
   background: url(../img/bg1.jpg) no-repeat center center fixed;
+  background-size: cover;
 }
 
 .navbar-fixed-top.transparent{

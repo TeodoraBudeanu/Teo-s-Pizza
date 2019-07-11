@@ -31,7 +31,7 @@ def place_order(request):
         orderItem = OrderItem(order=order)
         itemsForm = OrderItemForm(instance=orderItem)
 
-        OrderItemFormSet = modelformset_factory(OrderItem, exclude=(), extra=2)
+        OrderItemFormSet = modelformset_factory(OrderItem, exclude=(), extra=1)
         formset = OrderItemFormSet(queryset=OrderItem.objects.none())
 
     return render(request, "orders/order_form.html", {'formOrder' : form,

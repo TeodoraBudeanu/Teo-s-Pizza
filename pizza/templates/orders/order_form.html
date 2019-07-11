@@ -38,15 +38,23 @@
     <div class="form-group col-md-2 mb-0 quantity">
       {{ formOrderItem.quantity | as_crispy_field }}
     </div>
+    <div class="form-group">
+      <button id="delete" type="button" class="btn btn-danger btn-block delete-form-row">Delete this item</button>
+    </div>
+
+
   </div>
   {% endfor %}
+  <div>
+    <button class="btn btn-success add-form-row">Add another item to my order</button>
+  </div><br>
 
 
   <div class="form-group">
     <label for="output1" style="color:tomato">To pay</label>
     <output id="output1" class="form-control"></output>
   </div>
-  <button class="btn btn-primary" id="yw1">Pay & Send Order</button><br><br>
+  <button class="btn btn-primary submit-button" id="yw1">Pay & Send Order</button><br><br>
 </form>
 
 {% endblock %}
