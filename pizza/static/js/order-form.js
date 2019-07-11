@@ -22,7 +22,7 @@ $(document).ready(function(){
       else if (pizza!="---------" && quantity>0){
           $.ajax({
             type:"GET",
-            url: "{% url 'get_price' %}",
+            url: "get_price",
             data: { name: pizza },
             async: true,
             datatype: "text",

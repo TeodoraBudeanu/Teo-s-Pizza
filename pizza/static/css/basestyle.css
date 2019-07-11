@@ -6,15 +6,12 @@ div.menubutton {
   margin: 6px 12px;
 }
 body {
+  color: black;
   text-align: center;
   background: url(../img/bg1.jpg) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  background-size: cover;
-  -o-background-size: cover;
 }
 
-.navbar.transparent{
+.navbar-fixed-top.transparent{
   padding:10px;
   background: rgba(255, 255, 255, 0.3);
   font-family: "Marker Felt";
@@ -26,12 +23,20 @@ body {
 }
 
 .navbar-brand{
-  color:black;
   font-size:170%;
 }
 
 .dropdown {
-  width = 200px;
+  width = 300px;
+}
+
+a {
+  color: black !important;
+}
+
+#hello {
+  color: black;
+  margin-right: 100px;
 }
 
 iframe#myIframe {

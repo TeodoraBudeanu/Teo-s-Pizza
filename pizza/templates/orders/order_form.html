@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-
 {% block title %}
   Place your order at Teo's Pizza
 {% endblock title %}
@@ -10,7 +9,7 @@
 {{ block.super }}
 
 <style>
-  .container   {
+  .container {
     margin-top: 120px;
     font-family: "Chalkduster";
     font-size: 150%;
@@ -18,53 +17,12 @@
     background: rgba(255, 255, 255, 0.3) };
     max-width:160px;
   }
-
   </style>
 {% endblock styling %}
 
-
 {% block scripts %}
 {{ block.super }}
-<script type="text/javascript">
-  $(document).ready(function(){
-
-    $('button').prop('disabled', true);
-
-    $(".form-row").change(function(){
-      calculate_total();
-    });
-
-    function calculate_total(){
-      var total = 0;
-      $(".form-row").each(function(){
-        var price = 0;
-        var pizza = $(this).find(".select :selected").text();
-        var quantity = $(this).find("input").val();
-
-        if (!quantity>0){
-          $("#output1").val(total);
-          if ($("#output1").val()==0){
-            $('button').prop('disabled', true);
-          };
-        }
-        else if (pizza!="---------" && quantity>0){
-            $.ajax({
-              type:"GET",
-              url: "{% url 'get_price' %}",
-              data: { name: pizza },
-              async: true,
-              datatype: "text",
-              success: function(data){
-                total = total + data * quantity;
-                $("#output1").val(total);
-                if ($("#output1").val()>0) {
-                  $('button').prop('disabled', false);
-                }
-              }})};
-        });
-    };
-  });
- </script>
+<script type="text/javascript" src="../../static/js/order-form.js"></script>
 {% endblock %}
 
 {% block content %}
