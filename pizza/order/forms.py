@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, Textarea
 from django.core.exceptions import ValidationError
 
 from .models import Order, OrderItem
@@ -13,7 +13,7 @@ class OrderItemForm(ModelForm):
 
     class Meta:
         model = OrderItem
-        exclude = []
+        exclude = ['confirmed']
 
 class OrderForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -24,4 +24,7 @@ class OrderForm(ModelForm):
 
     class Meta:
         model = Order
-        exclude = []
+        exclude = ['confirmed']
+        widgets = {
+            'comment': Textarea(attrs={'cols': 80, 'rows': 5}),
+        }

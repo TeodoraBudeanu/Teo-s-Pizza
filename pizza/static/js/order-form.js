@@ -1,6 +1,9 @@
 $(document).ready(function(){
+  calculate_total();
 
-  $('.submit-button').prop('disabled', true);
+  if ($("#output1").val()>0) {
+      $('.submit-button').prop('disabled', false);
+  }
 
   $(".form-row").change(function(){
     calculate_total();

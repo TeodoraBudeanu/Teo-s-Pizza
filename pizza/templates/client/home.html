@@ -36,5 +36,7 @@ Home: {{ user.username }}
             href="{{ order.get_absolute_url }}">{{ order }}</a>
       {% endfor %}
     </div>
+  {% else %}
+  <h3>Hello, {{ user }}! You are ready for placing your first order.</h3>
   {% endif %}
 {% endblock %}

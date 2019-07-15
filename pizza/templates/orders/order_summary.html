@@ -34,17 +34,16 @@
   </div>
   <div class="form-row">
     <div class="col-sm-6 table-bordered">Date</div>
-    <div class="col-sm-6 table-bordered">{{ order.date }} &euro;</div>
+    <div class="col-sm-6 table-bordered">{{ order.date }}</div>
   </div>
   {% if order.comment %}
   <div class="form-row">
     <div class="col-sm-6 table-bordered">Comments</div>
-    <div class="col-sm-6 table-bordered">{{ order.comment }} &euro;</div>
+    <div class="col-sm-6 table-bordered">{{ order.comment }}</div>
   </div>
   {% endif %}
-<br><br><br>
+<br><br><br><br>
   <h3>Order Items</h3>
-  <br>
   {% for ol in order_items %}
   <div class="form-row">
     <div class="col-sm-6 table-bordered" >

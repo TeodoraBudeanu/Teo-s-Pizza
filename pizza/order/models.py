@@ -28,8 +28,9 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     address = models.CharField(max_length = 30)
     comment = models.TextField(blank=True)
-    objects = OrdersQuerySet.as_manager()
     date = models.DateField(auto_now_add=True)
+    objects = OrdersQuerySet.as_manager()
+    confirmed = models.IntegerField(default = '0')
 
     def __str__(self):
         return "Order {} - {}".format(self.id, self.date)
@@ -48,3 +49,4 @@ class OrderItem(models.Model):
                                             MaxValueValidator(10)])
     order = models.ForeignKey(Order, related_name='order_items',
                                     on_delete=models.CASCADE, editable=False)
+    confirmed = models.IntegerField(default = '0')

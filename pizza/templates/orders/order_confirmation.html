@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+  Order summary
+{% endblock title %}
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript">
+  $(document).ready(function(){
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = mm + '/' + dd + '/' + yyyy;
+    $("#today").html(today);
+
+  //  calculate_total();
+
+    function calculate_total(){
+      var total = 0;
+      $(".item").each(function(){
+        var pizza = $(this).find(".pizza").text();
+        var quantity = $(this).find("quantity").val();
+
+      $.ajax({
+        type:"GET",
+        url: "get_price",
+        data: { name: pizza },
+        async: true,
+        datatype: "text",
+        success: function(data){
+          total = total + data * quantity;
+          $("#amount").val(total);
+        }});
+      });
+    };
+  });
+</script>
+{% endblock %}
+
+{% block styling %}
+{{ block.super }}
+<style>
+  .container   {
+    margin-top: 150px;
+    font-family: "Chalkduster";
+    font-size: 150%;
+    max-width:750px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .col-sm-6 {
+    background: rgba(255, 255, 255, 0.3)
+  }
+
+  </style>
+{% endblock styling %}
+
+{% block content %}
+<form role="form" action="{% url 'confirm_order' %}" method="post">
+    {% csrf_token %}
+<h1>Order details</h1><br>
+<div class="row">
+  <div class="col-sm-6 table-bordered">Date</div>
+  <div id="today" class="col-sm-6 table-bordered"></div>
+</div>
+<div class="form-group">
+  <div class="row">
+    <div class="col-sm-6 table-bordered">Amount</div>
+    <div id="amount" class="col-sm-6 table-bordered">{{ order.get_amount }} &euro;</div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 table-bordered">Comments</div>
+    <div class="col-sm-6 table-bordered">{{ order.comment }}</div>
+  </div>
+</div>
+
+  <h3>Order Items</h3>
+  <br>
+  {% for oi in orderItems %}
+  <div class="form-row item">
+    <div class="form-row col-sm-6 table-bordered pizza" >
+      {{ oi.pizza_type }}
+    </div>
+    <div class="form-row col-sm-6 table-bordered quantity">
+      {{ oi.quantity }}
+    </div>
+  </div>
+  <br>
+  {% endfor %}
+  <br>
+  <button class="form-row btn btn-success submit-button" id="yw1">
+          Pay & Send Order
+  </button><br><br>
+</form>
+{% endblock %}
