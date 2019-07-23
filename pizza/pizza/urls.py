@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^$', welcome, name = "welcome"),
     re_path(r'^client/', include('client.urls')),
-    re_path(r'^order/', include('order.urls'))
+    re_path(r'^order/', include('order.urls')),
+    re_path(r'^api-auth/', include('rest_framework.urls')),
 ]

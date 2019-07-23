@@ -8,8 +8,13 @@ class Pizza(models.Model):
     name = models.CharField (max_length = 30)
     description = models.TextField()
     price = models.IntegerField(validators=[MinValueValidator(0),
-                                            MaxValueValidator(30)])
+                                            MaxValueValidator(100)])
     img_url = models.CharField(max_length = 50, default = "bg1.jpg")
+    stock = models.IntegerField(validators=[MinValueValidator(0),
+                                        MaxValueValidator(100)], default = '0')
+
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -31,6 +36,10 @@ class Order(models.Model):
     date = models.DateField(auto_now_add=True)
     objects = OrdersQuerySet.as_manager()
     confirmed = models.IntegerField(default = '0')
+    paid = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-id']
 
     def __str__(self):
         return "Order {} - {}".format(self.id, self.date)
@@ -49,4 +58,3 @@ class OrderItem(models.Model):
                                             MaxValueValidator(10)])
     order = models.ForeignKey(Order, related_name='order_items',
                                     on_delete=models.CASCADE, editable=False)
-    confirmed = models.IntegerField(default = '0')
