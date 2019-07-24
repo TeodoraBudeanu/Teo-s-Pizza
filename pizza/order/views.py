@@ -65,7 +65,7 @@ class GetPrice(TemplateView):
         return HttpResponse(pizza.price)
 
 
-class OrderSummary(LoginRequiredMixin, DetailView):
+class OrderDetails(LoginRequiredMixin, DetailView):
     model = OrderForm
 
     def get(self, request,*args, **kwargs):
@@ -73,7 +73,7 @@ class OrderSummary(LoginRequiredMixin, DetailView):
         order_items = OrderItem.objects.all().filter(order=order)
         if not request.user == order.user:
             raise PermissionDenied
-        return render(request, "orders/order_summary.html", {'order': order,
+        return render(request, "orders/order_details.html", {'order': order,
                                                 'order_items': order_items})
 
 

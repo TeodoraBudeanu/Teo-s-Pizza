@@ -4,16 +4,16 @@ from .models import Pizza, Order, OrderItem
 class PizzaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pizza
-        fields = ['id', 'name', 'description', 'price', 'stock', 'img_url']
+        fields = '__all__'
 
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['id', 'user', 'address', 'comment', 'date', 'confirmed']
+        fields = '__all__'
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
-        fields = ['id', 'pizza_type', 'quantity', 'order']
+        fields = '__all__'

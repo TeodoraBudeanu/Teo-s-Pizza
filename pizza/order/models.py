@@ -49,7 +49,7 @@ class Order(models.Model):
         return sum([Pizza.objects.get(pk=ol.pizza_type.id).price for ol in self.order_items.all()])
 
     def get_absolute_url(self):
-        return reverse('order_summary', args=[self.id])
+        return reverse('order_details', args=[self.id])
 
 
 class OrderItem(models.Model):
