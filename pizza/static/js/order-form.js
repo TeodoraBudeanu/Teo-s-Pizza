@@ -1,4 +1,99 @@
 $(document).ready(function(){
+  var order_id = document.getElementById("order").innerHTML;
+
+
+
+  $.when(
+    $.get("get_order", {id : order_id }),
+    $.get("get_pizzas")
+  ).then(
+    function(order, pizzas){
+      var pizza_types = [];
+      pizzas[0].forEach(myFunction);
+      function myFunction(item){
+        pizza_types.push(item.name);
+      }
+
+      $('form').jsonForm({
+        schema: {
+          type: "object",
+          required: ["address", "order_items"],
+          properties: {
+            address: {type: 'string'},
+            comment: {type: 'string'},
+            order_items: {
+              type: 'array',
+              items: {
+                type: "object",
+                required: ["pizza_type", "quantity"],
+                properties: {
+                  pizza_type:{type: "string" , enum: "P" },
+                  quantity: {type: "integer", default: 1},
+                },
+              },
+            },
+          },
+        },
+        uiSchema: {
+          type: "VerticalLayout",
+          elements:[
+            {
+              type: "Control",
+              label: "Address",
+              scope: {"$ref": "#/properties/address"}
+            },
+            {
+              type: "Control",
+              label: "Comment",
+              scope: "#/properties/comment"
+            },
+           ],
+        },
+        form: [
+          "*",
+          {
+            type: "submit",
+            title: "Save Order",
+          }
+        ],
+        value: order[0],
+        onSubmit: function (errors, values) {
+           if (errors) {
+             alert(errors);
+           }
+           else {
+             alert("OK");
+           }
+         }
+      });
+            $("select[id*='pizza_type']").change(function(){
+              console.log($(this).find(".select :selected").text());
+              $.get("get_stock", {name: $(this).innerHTML}).done(
+                function(stock){
+                  console.log($(this).innerHTML);
+                  console.log(stock);
+                }
+              )
+            });
+          }
+        ).fail(function(err) {
+          console.error('Oops', err);
+        });
+      });
+/*  $.ajax({
+    type:"GET",
+    url: "place_order",
+    data: { name: pizza },
+    async: true,
+    datatype: "text",
+    success: function(data){
+      total = total + data * quantity;
+      $("#output1").val(total);
+      if ($("#output1").val()>0) {
+        $('.submit-button').prop('disabled', false);
+      }
+    }});
+
   calculate_total();
 
   if ($("#output1").val()>0) {
@@ -103,4 +198,4 @@ $(document).ready(function(){
     }
     return false;
 }
-});
+});*/

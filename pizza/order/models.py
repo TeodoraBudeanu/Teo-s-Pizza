@@ -26,17 +26,14 @@ class OrdersQuerySet(models.QuerySet):
     def orders_for_client(self, user):
         return self.filter(user=user)
 
-    def order_items_for_order(self):
-        return self.order_items.all()
-
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    address = models.CharField(max_length = 30)
-    comment = models.TextField(blank=True)
+    address = models.CharField(max_length = 30, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
     date = models.DateField(auto_now_add=True)
-    objects = OrdersQuerySet.as_manager()
-    confirmed = models.IntegerField(default = '0')
+    confirmed = models.BooleanField(default=False)
     paid = models.BooleanField(default=False)
+    objects = OrdersQuerySet.as_manager()
 
     class Meta:
         ordering = ['-id']
@@ -45,7 +42,6 @@ class Order(models.Model):
         return "Order {} - {}".format(self.id, self.date)
 
     def get_amount(self):
-    #    return sum([ol.amount for ol in self.order_items.all()])
         return sum([Pizza.objects.get(pk=ol.pizza_type.id).price for ol in self.order_items.all()])
 
     def get_absolute_url(self):
@@ -53,8 +49,8 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    pizza_type = models.ForeignKey(Pizza, on_delete=models.CASCADE)
+    pizza_type = models.ForeignKey(Pizza, on_delete=models.CASCADE, blank=True, null=True)
     quantity = models.IntegerField(validators=[MinValueValidator(0),
-                                            MaxValueValidator(10)])
+                                            MaxValueValidator(10)], default='0')
     order = models.ForeignKey(Order, related_name='order_items',
-                                    on_delete=models.CASCADE, editable=False)
+                                    on_delete=models.CASCADE)
