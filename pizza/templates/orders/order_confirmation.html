@@ -7,38 +7,6 @@
 
 {% block scripts %}
 {{ block.super }}
-<script type="text/javascript">
-  $(document).ready(function(){
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-
-    today = mm + '/' + dd + '/' + yyyy;
-    $("#today").html(today);
-
-  //  calculate_total();
-
-    function calculate_total(){
-      var total = 0;
-      $(".item").each(function(){
-        var pizza = $(this).find(".pizza").text();
-        var quantity = $(this).find("quantity").val();
-
-      $.ajax({
-        type:"GET",
-        url: "get_price",
-        data: { name: pizza },
-        async: true,
-        datatype: "text",
-        success: function(data){
-          total = total + data * quantity;
-          $("#amount").val(total);
-        }});
-      });
-    };
-  });
-</script>
 {% endblock %}
 
 {% block styling %}
@@ -60,23 +28,30 @@
 {% endblock styling %}
 
 {% block content %}
+<div class="hidden" id="order_id" >{{ order.id }}</div>
 <form role="form" action="{% url 'confirm_order' %}" method="post">
     {% csrf_token %}
 <h1>Order details</h1><br>
-<div class="row">
+<div class="form-row">
+  <div class="col-sm-6 table-bordered">Amount</div>
+  <div class="col-sm-6 table-bordered">{{ order.get_amount }} &euro;</div>
+</div>
+<div class="form-row">
   <div class="col-sm-6 table-bordered">Date</div>
-  <div id="today" class="col-sm-6 table-bordered"></div>
+  <div class="col-sm-6 table-bordered">{{ order.date }}</div>
 </div>
-<div class="form-group">
-  <div class="row">
-    <div class="col-sm-6 table-bordered">Amount</div>
-    <div id="amount" class="col-sm-6 table-bordered">{{ order.get_amount }} &euro;</div>
-  </div>
-  <div class="row">
-    <div class="col-sm-6 table-bordered">Comments</div>
-    <div class="col-sm-6 table-bordered">{{ order.comment }}</div>
-  </div>
+{% if order.comment != "" %}
+<div class="form-row">
+  <div class="col-sm-6 table-bordered">Comments</div>
+  <div class="col-sm-6 table-bordered">{{ order.comment }}</div>
 </div>
+{% else %}
+<div class="form-row">
+  <div class="col-sm-6 table-bordered">Comments</div>
+  <div class="col-sm-6 table-bordered">None</div>
+</div>
+{% endif %}
+<br><br><br><br>
 
   <h3>Order Items</h3>
   <br>

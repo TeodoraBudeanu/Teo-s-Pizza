@@ -12,7 +12,7 @@ from .forms import OrderForm, OrderItemForm
 from .models import Order, OrderItem, Pizza
 from .serializers import PizzaSerializer, OrderSerializer, OrderItemSerializer
 from rest_framework import status
-from rest_framework.generics import RetrieveAPIView, UpdateAPIView
+from rest_framework.generics import RetrieveAPIView, UpdateAPIView, CreateAPIView
 from rest_framework.views import APIView
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.response import Response
@@ -20,38 +20,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 # Create your views here.
-@method_decorator(login_required, name='dispatch')
-class PlaceOrder(RetrieveAPIView):
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'orders/order_form.html'
-    serializer_class = OrderSerializer
-
-    def get_queryset(self):
-        return Order.objects.all()
-
-    def get_object(self, queryset=None):
-        if queryset is None:
-            queryset = self.get_queryset()
-        queryset = queryset.filter(user=self.request.user).filter(confirmed='0')
-        try:
-            obj = queryset.get()
-        except queryset.model.DoesNotExist:
-            return None
-        return obj
-
-    def get(self, request, *args, **kwargs):
-        order = self.get_object()
-        if(order is None):
-            order = Order(user=request.user)
-            order.save()
-        return Response({'order_id': order.id})
-
 @method_decorator(csrf_exempt, name='dispatch')
 class GetOrder(TemplateView):
 
     def get(self, request):
         order_id = request.GET.get('id')
         order = get_object_or_404(Order, pk=order_id)
+        setattr(order, 'confirmed', '0')
+        order.save()
         order_serializer = OrderSerializer(order)
         return JsonResponse(order_serializer.data)
 
@@ -78,54 +54,89 @@ class GetPizzaStock(TemplateView):
         return JsonResponse(stock)
 
 
-class SaveOrder(UpdateAPIView):
+@method_decorator(login_required, name='dispatch')
+class PlaceOrder(RetrieveAPIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'orders/order_form.html'
+    serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        return Order.objects.all()
+
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+        queryset = queryset.filter(paid='0').filter(user=self.request.user)
+        try:
+            obj = queryset.get()
+        except queryset.model.DoesNotExist:
+            return None
+        return obj
+
+    def get(self, request, *args, **kwargs):
+        order = self.get_object()
+        if (order is None):
+            order = Order(user=request.user)
+            order.save()
+            order_item = OrderItem(order=order)
+            order_item.save()
+        else:
+            setattr(order, 'confirmed', '0')
+        return Response({'order_id': order.id})
+
+
+class SaveOrder(CreateAPIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'orders/order_details.html'
     serializer_class = OrderSerializer
+    permission_classes = []
+
+    def get_queryset(self):
+        return Order.objects.all()
 
     def post(self, request, *args, **kwargs):
-        #TODO: populate Date in Order
+        # update order
         order = get_object_or_404(Order, pk=kwargs['pk'])
-        order_serializer = OrderSerializer(order, request.data)
-        order_items = OrderItem.objects.filter(order=order)
-        order_items_serializer = OrderItemSerializer()
-
-
-
-
-        formset = OrderItemFormSet(request.POST, request.FILES)
-        if (form.is_valid() and formset.is_valid()):
-            order = form.save()
-            order.save()
-            instances = formset.save(commit=False)
-            for i in instances:
-                i.order=order
-                i.save()
-            return redirect('confirm_order')
-#        Order.objects.filter(confirmed='0').delete()
-#        order = Order(user=request.user)
-#        form = OrderForm(instance=order)
-#        orderItem = OrderItem(order=order)
-#        itemsForm = OrderItemForm(instance=orderItem)
-#        OrderItemFormSet = modelformset_factory(OrderItem, exclude=())
-#        formset = OrderItemFormSet(queryset=OrderItem.objects.none())
-#        return render(request, "orders/order_form.html", {'formOrder' : form,
-#                                    'formSetOrderItem': formset})
-
-
-
-class ConfirmOrder(LoginRequiredMixin, TemplateView):
-    def get(self, request, format=None):
-        order = Order.objects.get(confirmed='0')
-        orderItems = OrderItem.objects.filter(order=order)
-        return render(request, "orders/order_confirmation.html",
-                                {'order': order, 'orderItems': orderItems})
-
-    def post(self, request, format=None):
-        order = Order.objects.get(confirmed='0')
+        x = request.data.dict()
+        serializer = OrderSerializer(order, data=x, partial=True)
+        if (serializer.is_valid()):
+            serializer.save()
+        else:
+            return Response({'text':serializer.errors}, template_name = 'error.html',
+                                             status=status.HTTP_418_NOT_VALID)
+        order=serializer.save()
         setattr(order, 'confirmed', '1')
         order.save()
-        orderItems = OrderItem.objects.filter(order=order)
+        # update order items
+        OrderItem.objects.filter(order=order).delete()
+        y = [(key, value) for key, value in x.items() if 'order' in key.lower()]
+        sorty = sorted(y, key=lambda q:q[0])
+        for i in range(0, len(sorty)-1, 2):
+            order_item = OrderItem(order=order, pizza_type=Pizza.objects.get(name=sorty[i][1]), quantity=sorty[i+1][1])
+            order_item.save()
+#    else: orderitem = OrderItem(order=order, pizza_type=sorty[0][1], quantity=sorty[1][1])
+
+        return redirect('confirm_order')
+
+
+class ConfirmOrder(CreateAPIView):
+    def get_queryset(self):
+        return Order.objects.all()
+
+    def get(self, request, format=None):
+        order = Order.objects.get(paid='0')
+        order_items = OrderItem.objects.filter(order=order)
+        return render(request, "orders/order_confirmation.html",
+                                {'order': order, 'orderItems': order_items})
+
+    def post(self, request, format=None):
+        order = Order.objects.filter(paid='0').get(user=request.user)
+        setattr(order, 'paid', '1')
+        order.save()
+        order_items = OrderItem.objects.filter(order=order)
+        for item in order_items:
+            item.pizza_type.stock -= item.quantity
+            item.pizza_type.save()
         return redirect(order)
 
 
@@ -175,7 +186,6 @@ class OrderDetails(RetrieveAPIView):
             text = "We couldn't find the Order you requested."
             return Response({'text':text}, template_name = 'error.html',
                                              status=status.HTTP_404_NOT_FOUND)
-
 
 
 class PizzaDetails(RetrieveAPIView):

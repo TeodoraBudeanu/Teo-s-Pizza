@@ -2,6 +2,9 @@ $(document).ready(function(){
   var order_id = document.getElementById("order").innerHTML;
 
 
+  $('select').click(function(){alert("clicked");});
+
+
 
   $.when(
     $.get("get_order", {id : order_id }),
@@ -14,72 +17,90 @@ $(document).ready(function(){
         pizza_types.push(item.name);
       }
 
-      $('form').jsonForm({
+      $("form").jsonForm({
         schema: {
           type: "object",
-          required: ["address", "order_items"],
           properties: {
-            address: {type: 'string'},
-            comment: {type: 'string'},
+            id: {type: "integer"},
+            address: {type: "string", minLength: 5, required: true},
+            comment: {type: "string"},
             order_items: {
-              type: 'array',
+              type: "array",
               items: {
                 type: "object",
-                required: ["pizza_type", "quantity"],
+                title: "Item",
                 properties: {
-                  pizza_type:{type: "string" , enum: "P" },
-                  quantity: {type: "integer", default: 1},
+                  pizza_type:{type: "string" , enum: pizza_types , minLength: 1, required: true},
+                  quantity: {type: "integer", default: 1, minimum: 1,  maximum: 10, required: true},
                 },
               },
             },
+            user: {type: "integer"},
           },
         },
-        uiSchema: {
-          type: "VerticalLayout",
-          elements:[
-            {
-              type: "Control",
-              label: "Address",
-              scope: {"$ref": "#/properties/address"}
-            },
-            {
-              type: "Control",
-              label: "Comment",
-              scope: "#/properties/comment"
-            },
-           ],
-        },
         form: [
-          "*",
           {
-            type: "submit",
-            title: "Save Order",
-          }
-        ],
+            key: "id",
+            type: "hidden"
+          },
+          {
+            key: "address",
+            title: "Address"
+          },
+          {
+            key: "comment",
+            title: "Comment",
+          },
+          {
+            type: "array",
+            title: " ",
+            items: [
+              {
+                type: "section",
+                items: [{
+                      key: "order_items[].pizza_type",
+                      title: "Pizza",
+                      htmlClass: "col-md-10 mb-0",
+                    },
+                    {
+                      key: "order_items[].quantity",
+                      title: "Quantity",
+                      htmlClass: "col-md-2 mb-0"
+                    },
+              ]
+            }
+          ]
+        },
+        {
+          key: "user",
+          type: "hidden"
+        },
+
+        {
+          type: "submit",
+          title: "Confirm Order",
+          htmlClass: "btn btn-success"
+        }],
         value: order[0],
-        onSubmit: function (errors, values) {
-           if (errors) {
-             alert(errors);
-           }
-           else {
-             alert("OK");
-           }
-         }
       });
-            $("select[id*='pizza_type']").change(function(){
-              console.log($(this).find(".select :selected").text());
-              $.get("get_stock", {name: $(this).innerHTML}).done(
-                function(stock){
-                  console.log($(this).innerHTML);
-                  console.log(stock);
-                }
-              )
-            });
-          }
-        ).fail(function(err) {
-          console.error('Oops', err);
-        });
-      });
+    }
+  ).fail(function(err) {
+    console.error('Oops', err);
+  });
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
 /*  $.ajax({
     type:"GET",
     url: "place_order",

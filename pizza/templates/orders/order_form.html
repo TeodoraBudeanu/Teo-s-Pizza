@@ -27,11 +27,10 @@
 {% endblock %}
 
 {% block content %}
-
+<a class="hidden" id="order">{{ order_id }}</a>
 <form class='form' action="{% url 'save_order' pk=order_id %}" method="POST">
     {% csrf_token %}
-    <a class="hidden" id="order">{{ order_id }}</a>
-
+  
 </form>
 
 <!--<form role="form" action="{% url 'place_order' %}" method="post">

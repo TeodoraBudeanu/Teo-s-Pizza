@@ -22,8 +22,6 @@
   <form role="form" action="{% url 'client_login' %}" method="post">
     {% csrf_token %}
 
-    <p>Please login.</p>
-
     {{ form | crispy }}
 
     <button type="submit" class="btn btn-success">Sign in</button>
