@@ -11,9 +11,13 @@
   <link rel="stylesheet" href="/static/css/loginpagestyle.css">
     <style>
       body {
-          padding-top: 200px;
-          padding-bottom: 20px;
-        }
+        padding-top: 200px;
+        padding-bottom: 20px;
+      }
+
+      #create {
+        text-color: white; !important
+      }
     </style>
 {% endblock styling %}
 
@@ -25,6 +29,7 @@
     {{ form | crispy }}
 
     <button type="submit" class="btn btn-success">Sign in</button>
+    <a id="create"  class="btn btn-primary" name="button" href="{% url 'new_user' %}">Create new account</a>
 
   </form>
 
