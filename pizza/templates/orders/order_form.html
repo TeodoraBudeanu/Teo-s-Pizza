@@ -38,7 +38,7 @@
 </form>
 <form id ="orderItemsForm" role="form">
   {% for item in order_items_ser %}
-  <div class="form-row" name="order_item" >  
+  <div class="form-row" name="order_item" >
     <div class="form-row">
       <div class="form-group col-md-10 mb-0 pizza" >
         {% render_field item.pizza_type style=style_hor %}
@@ -46,6 +46,7 @@
       <div class="form-group col-md-2 mb-0 quantity">
         {% render_field item.quantity style=style_hor %}
       </div>
+      <div id="quantity_response" class="response"></div>
       <div class="form-group">
         <button id="delete" type="button" class="btn btn-danger btn-block delete-form-row">Delete this item</button>
       </div>

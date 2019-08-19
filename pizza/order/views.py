@@ -140,6 +140,7 @@ class SaveOrder(RetrieveAPIView):
                 serializer.save()
             else:
                 return JsonResponse({'text':serializer.errors})
+        OrderItem.objects.filter(quantity=0).delete()
         return JsonResponse(order.get_amount(), safe=False)
 
 
@@ -175,6 +176,17 @@ class GetPrice(TemplateView):
             return JsonResponse("0");
         pizza = get_object_or_404(Pizza, name=pizza_name)
         return JsonResponse(pizza.price)
+
+class CheckStock(TemplateView):
+
+    def get(self, request):
+        pizza_id = request.GET.get('pizza_id')
+        quantity = request.GET.get('quantity')
+        pizza = get_object_or_404(Pizza, pk=pizza_id)
+        if pizza.stock >= int(quantity):
+            return JsonResponse("ok", safe=False)
+        else:
+            return JsonResponse("There are only " + str(pizza.stock) + " " + pizza.name + " left in stock.", safe=False)
 
 
 class CheckTotal(TemplateView):

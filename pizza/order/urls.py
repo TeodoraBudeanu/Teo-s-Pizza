@@ -12,5 +12,6 @@ urlpatterns = [
     re_path(r'^get_price$', GetPrice.as_view(), name="get_price"),
     re_path(r'^confirm_order$', ConfirmOrder.as_view(), name="confirm_order"),
     re_path(r'^check_total$', CheckTotal.as_view(), name="check_total"),
+    re_path(r'^check_stock$', CheckStock.as_view(), name="check_stock"),
 
 ]
