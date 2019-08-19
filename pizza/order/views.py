@@ -59,6 +59,8 @@ class PlaceOrder(RetrieveAPIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'orders/order_form.html'
     serializer_class = OrderSerializer
+    style_vert = {'template_pack': 'rest_framework/vertical/'}
+    style_hor = {'template_pack': 'rest_framework/inline/'}
 
     def get_queryset(self):
         return Order.objects.all()
@@ -74,6 +76,7 @@ class PlaceOrder(RetrieveAPIView):
         return obj
 
     def get(self, request, *args, **kwargs):
+        # get order, order_item objects
         order = self.get_object()
         if (order is None):
             order = Order(user=request.user)
@@ -82,10 +85,19 @@ class PlaceOrder(RetrieveAPIView):
             order_item.save()
         else:
             setattr(order, 'confirmed', '0')
-        return Response({'order_id': order.id})
+            order.save()
+        # serializers
+        order_ser = OrderSerializer(order)
+        order_items_ser = []
+        oi_query = OrderItem.objects.filter(order=order)
+        for item in oi_query:
+            order_items_ser.append(OrderItemSerializer(item))
+        return Response({'order_ser': order_ser, 'order_items_ser' : order_items_ser,
+                    'order': order, 'style_vert': self.style_vert, 'style_hor': self.style_hor})
 
 
-class SaveOrder(CreateAPIView):
+@method_decorator(login_required, name='dispatch')
+class SaveOrder(RetrieveAPIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'orders/order_details.html'
     serializer_class = OrderSerializer
@@ -94,38 +106,56 @@ class SaveOrder(CreateAPIView):
     def get_queryset(self):
         return Order.objects.all()
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request):
+        # parse request data
+        def parseString(s):
+            s = s.split('&')
+            st = []
+            arr = []
+            for subs in s:
+                subs = subs.split('=')
+                arr.append({subs[0]: subs[1]})
+            return arr
+
+        order_data = parseString(request.GET['order_data'])
+        order_item_data = parseString(request.GET['order_item_data'])
         # update order
-        order = get_object_or_404(Order, pk=kwargs['pk'])
-        x = request.data.dict()
-        serializer = OrderSerializer(order, data=x, partial=True)
+        order = get_object_or_404(Order, pk=request.GET['order_id'])
+        order_data = {**order_data[1], **order_data[2]}
+        serializer = OrderSerializer(order, data=order_data, partial=True)
         if (serializer.is_valid()):
-            serializer.save()
+            order=serializer.save()
+            setattr(order, 'confirmed', '1')
+            order.save()
         else:
-            return Response({'text':serializer.errors}, template_name = 'error.html',
-                                             status=status.HTTP_418_NOT_VALID)
-        order=serializer.save()
-        setattr(order, 'confirmed', '1')
-        order.save()
+            return JsonResponse({'text':serializer.errors})
         # update order items
         OrderItem.objects.filter(order=order).delete()
-        y = [(key, value) for key, value in x.items() if 'order' in key.lower()]
-        sorty = sorted(y, key=lambda q:q[0])
-        for i in range(0, len(sorty)-1, 2):
-            order_item = OrderItem(order=order, pizza_type=Pizza.objects.get(name=sorty[i][1]), quantity=sorty[i+1][1])
+
+        n = len(order_item_data)
+        for i in range(0, n, 2):
+            order_item = OrderItem(order=order)
             order_item.save()
-#    else: orderitem = OrderItem(order=order, pizza_type=sorty[0][1], quantity=sorty[1][1])
+            data = {**order_item_data[i], **order_item_data[i+1]}
+            serializer = OrderItemSerializer(order_item, data=data, partial=True)
+            import pdb; pdb.set_trace()
+            if (serializer.is_valid()):
+                serializer.save()
+                import pdb; pdb.set_trace()
+            else:
+                return JsonResponse({'text':serializer.errors})
+        return JsonResponse("confirm_order", safe=False)
 
-        return redirect('confirm_order')
 
-
+@method_decorator(login_required, name='dispatch')
 class ConfirmOrder(CreateAPIView):
     def get_queryset(self):
         return Order.objects.all()
 
     def get(self, request, format=None):
-        order = Order.objects.get(paid='0')
+        order = Order.objects.filter(paid='0').get(user=request.user)
         order_items = OrderItem.objects.filter(order=order)
+        import pdb; pdb.set_trace()
         return render(request, "orders/order_confirmation.html",
                                 {'order': order, 'orderItems': order_items})
 
@@ -140,6 +170,7 @@ class ConfirmOrder(CreateAPIView):
         return redirect(order)
 
 
+@method_decorator(login_required, name='dispatch')
 @method_decorator(csrf_exempt, name='dispatch')
 class GetPrice(TemplateView):
 
@@ -149,6 +180,7 @@ class GetPrice(TemplateView):
             return HttpResponse("0");
         pizza = get_object_or_404(Pizza, name=pizza_name)
         return HttpResponse(pizza.price)
+
 
 @method_decorator(login_required, name='dispatch')
 class OrderDetails(RetrieveAPIView):
