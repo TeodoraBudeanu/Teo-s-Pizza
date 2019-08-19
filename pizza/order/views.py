@@ -48,9 +48,7 @@ class GetPizzaStock(TemplateView):
 
     def get(self, request):
         name = request.GET.get('name')
-        import pdb; pdb.set_trace()
         stock = get_object_or_404(Pizza, name=name).stock
-        import pdb; pdb.set_trace()
         return JsonResponse(stock)
 
 
@@ -138,13 +136,11 @@ class SaveOrder(RetrieveAPIView):
             order_item.save()
             data = {**order_item_data[i], **order_item_data[i+1]}
             serializer = OrderItemSerializer(order_item, data=data, partial=True)
-            import pdb; pdb.set_trace()
             if (serializer.is_valid()):
                 serializer.save()
-                import pdb; pdb.set_trace()
             else:
                 return JsonResponse({'text':serializer.errors})
-        return JsonResponse("confirm_order", safe=False)
+        return JsonResponse(order.get_amount(), safe=False)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -155,7 +151,6 @@ class ConfirmOrder(CreateAPIView):
     def get(self, request, format=None):
         order = Order.objects.filter(paid='0').get(user=request.user)
         order_items = OrderItem.objects.filter(order=order)
-        import pdb; pdb.set_trace()
         return render(request, "orders/order_confirmation.html",
                                 {'order': order, 'orderItems': order_items})
 
@@ -177,9 +172,17 @@ class GetPrice(TemplateView):
     def get(self, request):
         pizza_name = request.GET.get('name')
         if (pizza_name == '---------'):
-            return HttpResponse("0");
+            return JsonResponse("0");
         pizza = get_object_or_404(Pizza, name=pizza_name)
-        return HttpResponse(pizza.price)
+        return JsonResponse(pizza.price)
+
+
+class CheckTotal(TemplateView):
+
+    def get(self, request):
+        order_id = request.GET.get('order_id')
+        order = get_object_or_404(Order, pk=order_id)
+        return JsonResponse(order.get_amount(), safe=False)
 
 
 @method_decorator(login_required, name='dispatch')

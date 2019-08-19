@@ -1,6 +1,5 @@
 from django.urls import path, re_path
-from .views import PlaceOrder, SaveOrder, OrderDetails, PizzaDetails, GetPrice,\
-                            ConfirmOrder, GetOrder, GetPizzas, GetPizzaStock
+from .views import *
 
 urlpatterns = [
     re_path(r'^place_order$', PlaceOrder.as_view(), name="place_order"),
@@ -12,4 +11,6 @@ urlpatterns = [
     re_path(r'^get_stock$', GetPizzaStock.as_view(), name="get_stock"),
     re_path(r'^get_price$', GetPrice.as_view(), name="get_price"),
     re_path(r'^confirm_order$', ConfirmOrder.as_view(), name="confirm_order"),
+    re_path(r'^check_total$', CheckTotal.as_view(), name="check_total"),
+
 ]
