@@ -37,6 +37,15 @@ class CheckUsername(RetrieveAPIView):
         else:
             return JsonResponse("0", safe=False)
 
+class CheckEmail(RetrieveAPIView):
+
+    def get(self, request):
+        email = request.GET.get('email')
+        if User.objects.filter(email=email).count()>0:
+            return JsonResponse("1", safe=False)
+        else:
+            return JsonResponse("0", safe=False)
+
 
 class CreateNewUser(ListCreateAPIView):
     renderer_classes = [TemplateHTMLRenderer]
