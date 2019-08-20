@@ -1,57 +1,18 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.core.exceptions import PermissionDenied
-from django.forms import modelformset_factory
-from django.http import HttpResponse, Http404, JsonResponse
+from django.shortcuts import redirect, get_object_or_404
+from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import DetailView, FormView, TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .forms import OrderForm, OrderItemForm
 from .models import Order, OrderItem, Pizza
 from .serializers import PizzaSerializer, OrderSerializer, OrderItemSerializer
 from rest_framework import status
-from rest_framework.generics import RetrieveAPIView, UpdateAPIView, CreateAPIView
+from rest_framework.generics import RetrieveAPIView, UpdateAPIView, CreateAPIView, GenericAPIView
 from rest_framework.views import APIView
-from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 # Create your views here.
-@method_decorator(csrf_exempt, name='dispatch')
-class GetOrder(TemplateView):
-
-    def get(self, request):
-        order_id = request.GET.get('id')
-        order = get_object_or_404(Order, pk=order_id)
-        setattr(order, 'confirmed', '0')
-        order.save()
-        order_serializer = OrderSerializer(order)
-        return JsonResponse(order_serializer.data)
-
-
-@method_decorator(csrf_exempt, name='dispatch')
-class GetPizzas(TemplateView):
-
-    def get(self, request):
-        pizzas = Pizza.objects.filter(stock__gt=0)
-        pizzas_ser=[]
-        for pizza in pizzas:
-            pizzas_ser.append(PizzaSerializer(pizza).data)
-        return JsonResponse(pizzas_ser, safe=False)
-
-
-@method_decorator(csrf_exempt, name='dispatch')
-class GetPizzaStock(TemplateView):
-
-    def get(self, request):
-        name = request.GET.get('name')
-        stock = get_object_or_404(Pizza, name=name).stock
-        return JsonResponse(stock)
-
-
 @method_decorator(login_required, name='dispatch')
 class PlaceOrder(RetrieveAPIView):
     renderer_classes = [TemplateHTMLRenderer]
@@ -146,14 +107,16 @@ class SaveOrder(RetrieveAPIView):
 
 @method_decorator(login_required, name='dispatch')
 class ConfirmOrder(CreateAPIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = "orders/order_confirmation.html"
+
     def get_queryset(self):
         return Order.objects.all()
 
     def get(self, request, format=None):
         order = Order.objects.filter(paid='0').get(user=request.user)
         order_items = OrderItem.objects.filter(order=order)
-        return render(request, "orders/order_confirmation.html",
-                                {'order': order, 'orderItems': order_items})
+        return Response({'order': order, 'orderItems': order_items})
 
     def post(self, request, format=None):
         order = Order.objects.filter(paid='0').get(user=request.user)
@@ -166,18 +129,10 @@ class ConfirmOrder(CreateAPIView):
         return redirect(order)
 
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(csrf_exempt, name='dispatch')
-class GetPrice(TemplateView):
+class CheckStock(GenericAPIView):
 
-    def get(self, request):
-        pizza_name = request.GET.get('name')
-        if (pizza_name == '---------'):
-            return JsonResponse("0");
-        pizza = get_object_or_404(Pizza, name=pizza_name)
-        return JsonResponse(pizza.price)
-
-class CheckStock(TemplateView):
+    def get_queryset(self):
+        return Order.objects.all()
 
     def get(self, request):
         pizza_id = request.GET.get('pizza_id')
@@ -189,7 +144,10 @@ class CheckStock(TemplateView):
             return JsonResponse("There are only " + str(pizza.stock) + " " + pizza.name + " left in stock.", safe=False)
 
 
-class CheckTotal(TemplateView):
+class CheckTotal(GenericAPIView):
+
+    def get_queryset(self):
+        return Order.objects.all()
 
     def get(self, request):
         order_id = request.GET.get('order_id')

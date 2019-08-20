@@ -25,21 +25,29 @@ $(document).ready(function(){
   $(document).on('change', 'div[name=order_item]', function(){
     pizza_id = $(this).find(':selected').val();
     quantity = $(this).find('input[name=quantity]').val();
+    console.log(quantity);
     elem = $(this);
-    $.ajax({
-      type: "GET",
-      url: 'check_stock',
-      data: {pizza_id: pizza_id, quantity: quantity},
-      success: function(data){
-        if (data == 'ok'){
-            save_order();
-            elem.find('.response').html("");
+    if (quantity == ''){
+      elem.find('.response').html("<span class='not-exists'>Please select the desired quantity.</span>");
+      $('.submit-button').prop('disabled', true);
+    }
+    else {
+      $.ajax({
+        type: "GET",
+        url: 'check_stock',
+        data: {pizza_id: pizza_id, quantity: quantity},
+        success: function(data){
+          if (data == 'ok'){
+              save_order();
+              elem.find('.response').html("");
+            }
+            else {
+              elem.find('.response').html("<span class='not-exists'>"+ data +"</span>");
+            }
           }
-          else {
-            elem.find('.response').html("<span class='not-exists'>"+ data +"</span>");
-          }
-      }
-    });
+        });
+    }
+
   });
 
   function save_order(){

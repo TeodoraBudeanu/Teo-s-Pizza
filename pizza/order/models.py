@@ -1,17 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.urls import reverse
 # Create your models here.
 
 class Pizza(models.Model):
     name = models.CharField (max_length = 30)
     description = models.TextField()
-    price = models.IntegerField(validators=[MinValueValidator(0),
-                                            MaxValueValidator(100)])
+    price = models.IntegerField()
     img_url = models.CharField(max_length = 50, default = "bg1.jpg")
-    stock = models.IntegerField(validators=[MinValueValidator(0),
-                                        MaxValueValidator(100)], default = '0')
+    stock = models.IntegerField(default = '0')
 
     class Meta:
         ordering = ['name']
@@ -50,7 +47,6 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     pizza_type = models.ForeignKey(Pizza, on_delete=models.CASCADE, blank=True, null=True)
-    quantity = models.IntegerField(validators=[MinValueValidator(0),
-                                            MaxValueValidator(10)], default='0')
+    quantity = models.IntegerField(default='0')
     order = models.ForeignKey(Order, related_name='order_items',
                                     on_delete=models.CASCADE)
