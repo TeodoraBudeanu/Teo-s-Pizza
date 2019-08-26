@@ -108,3 +108,6 @@ django/
 
 #DB
 pizza/db.sqlite3
+
+.DS_Store
+pizza.DS_Store
