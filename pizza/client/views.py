@@ -18,8 +18,7 @@ class OrderList(generics.ListAPIView):
     serializer_class = OrderSerializer
 
     def get_queryset(self):
-        return
-        Order.objects.orders_for_client(self.request.user).filter(confirmed=1)
+        return Order.objects.orders_for_client(self.request.user).filter(confirmed=1)
 
     def get(self, request):
         queryset = self.get_queryset()
