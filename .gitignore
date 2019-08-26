@@ -110,3 +110,4 @@ django/
 pizza/db.sqlite3
 
 *.DS_Store
+pizza/__pycache__/
