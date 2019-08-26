@@ -1,0 +1,8 @@
+attrs==19.1.0
+Django==2.2.3
+django-crispy-forms==1.7.2
+djangorestframework==3.10.1
+pyrsistent==0.15.4
+pytz==2019.1
+six==1.12.0
+sqlparse==0.3.0
