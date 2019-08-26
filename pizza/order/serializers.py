@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Pizza, Order, OrderItem
 
+
 class PizzaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pizza
@@ -14,8 +15,8 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    order_items = OrderItemSerializer(many=True,
-                                    style={'base_template': 'listfieldset.html'})
+    order_items = OrderItemSerializer(many=True, style={'base_template':
+                                      'listfieldset.html'})
 
     class Meta:
         model = Order

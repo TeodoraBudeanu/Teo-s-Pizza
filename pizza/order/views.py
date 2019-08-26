@@ -1,20 +1,17 @@
 from django.shortcuts import redirect, get_object_or_404
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .models import Order, OrderItem, Pizza
 from .serializers import PizzaSerializer, OrderSerializer, OrderItemSerializer
 from rest_framework import status
-from rest_framework.generics import RetrieveAPIView, UpdateAPIView, CreateAPIView, GenericAPIView
-from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 
 # Create your views here.
 @method_decorator(login_required, name='dispatch')
-class PlaceOrder(RetrieveAPIView):
+class PlaceOrder(generics.RetrieveAPIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'orders/order_form.html'
     serializer_class = OrderSerializer
@@ -51,12 +48,13 @@ class PlaceOrder(RetrieveAPIView):
         oi_query = OrderItem.objects.filter(order=order)
         for item in oi_query:
             order_items_ser.append(OrderItemSerializer(item))
-        return Response({'order_ser': order_ser, 'order_items_ser' : order_items_ser,
-                    'order': order, 'style_vert': self.style_vert, 'style_hor': self.style_hor})
+        return Response({'order_ser': order_ser, 'order_items_ser':
+                        order_items_ser, 'order': order, 'style_vert':
+                        self.style_vert, 'style_hor': self.style_hor})
 
 
 @method_decorator(login_required, name='dispatch')
-class SaveOrder(RetrieveAPIView):
+class SaveOrder(generics.RetrieveAPIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'orders/order_details.html'
     serializer_class = OrderSerializer
@@ -69,7 +67,6 @@ class SaveOrder(RetrieveAPIView):
         # parse request data
         def parseString(s):
             s = s.split('&')
-            st = []
             arr = []
             for subs in s:
                 subs = subs.split('=')
@@ -83,11 +80,11 @@ class SaveOrder(RetrieveAPIView):
         order_data = {**order_data[1], **order_data[2]}
         serializer = OrderSerializer(order, data=order_data, partial=True)
         if (serializer.is_valid()):
-            order=serializer.save()
+            order = serializer.save()
             setattr(order, 'confirmed', '1')
             order.save()
         else:
-            return JsonResponse({'text':serializer.errors})
+            return JsonResponse({'text': serializer.errors})
         # update order items
         OrderItem.objects.filter(order=order).delete()
 
@@ -96,17 +93,18 @@ class SaveOrder(RetrieveAPIView):
             order_item = OrderItem(order=order)
             order_item.save()
             data = {**order_item_data[i], **order_item_data[i+1]}
-            serializer = OrderItemSerializer(order_item, data=data, partial=True)
+            serializer = OrderItemSerializer(order_item, data=data,
+                                             partial=True)
             if (serializer.is_valid()):
                 serializer.save()
             else:
-                return JsonResponse({'text':serializer.errors})
+                return JsonResponse({'text': serializer.errors})
         OrderItem.objects.filter(quantity=0).delete()
         return JsonResponse(order.get_amount(), safe=False)
 
 
 @method_decorator(login_required, name='dispatch')
-class ConfirmOrder(CreateAPIView):
+class ConfirmOrder(generics.CreateAPIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = "orders/order_confirmation.html"
 
@@ -129,7 +127,7 @@ class ConfirmOrder(CreateAPIView):
         return redirect(order)
 
 
-class CheckStock(GenericAPIView):
+class CheckStock(generics.GenericAPIView):
 
     def get_queryset(self):
         return Order.objects.all()
@@ -141,10 +139,11 @@ class CheckStock(GenericAPIView):
         if pizza.stock >= int(quantity):
             return JsonResponse("ok", safe=False)
         else:
-            return JsonResponse("There are only " + str(pizza.stock) + " " + pizza.name + " left in stock.", safe=False)
+            return JsonResponse("There are only " + str(pizza.stock) + " " +
+                                pizza.name + " left in stock.", safe=False)
 
 
-class CheckTotal(GenericAPIView):
+class CheckTotal(generics.GenericAPIView):
 
     def get_queryset(self):
         return Order.objects.all()
@@ -156,7 +155,7 @@ class CheckTotal(GenericAPIView):
 
 
 @method_decorator(login_required, name='dispatch')
-class OrderDetails(RetrieveAPIView):
+class OrderDetails(generics.RetrieveAPIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'orders/order_details.html'
     serializer_class = OrderSerializer
@@ -175,25 +174,23 @@ class OrderDetails(RetrieveAPIView):
             return None
         return obj
 
-    def get(self, request,*args, **kwargs):
+    def get(self, request, *args, **kwargs):
         order = self.get_object()
-        if(order!=None):
+        if(order is not None):
             if not request.user == order.user:
                 text = "You are not authorized to access this Order"
-                return Response({'text': text}, template_name = 'error.html',
-                                                 status=status.HTTP_404_NOT_FOUND)
+                return Response({'text': text}, template_name='error.html',
+                                status=status.HTTP_404_NOT_FOUND)
             order_items = OrderItem.objects.all().filter(order=order)
-            order_serializer = OrderSerializer(order)
-            order_items_serializer = OrderItemSerializer(order_items)
             return Response({'order': order, 'order_items': order_items},
-                                                    status=status.HTTP_200_OK)
+                            status=status.HTTP_200_OK)
         else:
             text = "We couldn't find the Order you requested."
-            return Response({'text':text}, template_name = 'error.html',
-                                             status=status.HTTP_404_NOT_FOUND)
+            return Response({'text': text}, template_name='error.html',
+                            status=status.HTTP_404_NOT_FOUND)
 
 
-class PizzaDetails(RetrieveAPIView):
+class PizzaDetails(generics.RetrieveAPIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'orders/pizza_details.html'
     serializer_class = PizzaSerializer
@@ -212,11 +209,13 @@ class PizzaDetails(RetrieveAPIView):
             return None
         return obj
 
-    def get(self, request,*args, **kwargs):
+    def get(self, request, *args, **kwargs):
         pizza = self.get_object()
-        if(pizza!=None):
+        if(pizza is not None):
             serializer = PizzaSerializer(pizza)
-            return Response({'pizza' : serializer.data}, status=status.HTTP_200_OK)
+            return Response({'pizza': serializer.data},
+                            status=status.HTTP_200_OK)
         else:
             text = "We couldn't find the Pizza you requested."
-            return Response({'text':text}, template_name = 'error.html', status=status.HTTP_404_NOT_FOUND)
+            return Response({'text': text}, template_name='error.html',
+                            status=status.HTTP_404_NOT_FOUND)
