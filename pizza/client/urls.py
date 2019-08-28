@@ -4,6 +4,7 @@ from .views import *
 
 
 urlpatterns = [
+    re_path(r'^$', welcome, name="welcome"),
     re_path(r'home$', OrderList.as_view(), name='client_home'),
     re_path(r'login$', LoginView.as_view(
             template_name="client/login_form.html"), name='client_login'),
@@ -12,5 +13,6 @@ urlpatterns = [
     re_path(r'check_username$', CheckUsername.as_view(),
             name="check_username"),
     re_path(r'check_email$', CheckEmail.as_view(), name="check_email"),
+
 
 ]

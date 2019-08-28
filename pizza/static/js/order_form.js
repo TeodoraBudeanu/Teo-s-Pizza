@@ -10,65 +10,68 @@ $(document).ready(function(){
       url: 'check_total',
       data: {order_id: order_id},
       success: function(data){
-        if (Number.isInteger(data)){
-          if (data>0) {
-            $('.submit-button').prop('disabled', false);
-          }
-          else {
-            $('.submit-button').prop('disabled', true);
-          }
+        if (data>0) {
+          $("#output1").val(data);
+          $('.submit-button').prop('disabled', false);
+        }
+        else {
+          $('.submit-button').prop('disabled', true);
         }
       }
     });
   }
 
-  $(document).on('change', 'div[name=order_item]', function(){
-    pizza_id = $(this).find(':selected').val();
-    quantity = $(this).find('input[name=quantity]').val();
-    console.log(quantity);
+  $(document).on('change', '#orderForm', function(){
+    address = $(this).find('input[name=address]').val();
+    comment = $(this).find('textarea[name=comment]').val();
+    console.log(address, comment);
     elem = $(this);
-    if (quantity == ''){
-      elem.find('.response').html("<span class='not-exists'>Please select the desired quantity.</span>");
+    if (address == ''){
+      $('#address_response').html("<span class='not-exists'>Please type in your address.</span>");
       $('.submit-button').prop('disabled', true);
     }
     else {
       $.ajax({
-        type: "GET",
-        url: 'check_stock',
-        data: {pizza_id: pizza_id, quantity: quantity},
-        success: function(data){
-          if (data == 'ok'){
-              save_order();
-              elem.find('.response').html("");
-            }
-            else {
-              elem.find('.response').html("<span class='not-exists'>"+ data +"</span>");
-            }
-          }
-        });
+        type: "get",
+        url: 'save_order',
+        data: {order_id: order_id, address: address, comment: comment}
+      });
     }
 
   });
 
-  function save_order(){
-    var order_data = $("#orderForm").serialize();
-    var order_item_data = $("#orderItemsForm").serialize();
+  $(document).on('change', 'div[name=order_item]', function(){
+    pizza_id = $(this).find(':selected').val();
+    quantity = $(this).find('input[name=quantity]').val();
+    elem = $(this);
+    item_id = elem.attr('value');
+    if (quantity == '' || quantity <= 0){
+      elem.find('.response').html("<span class='not-exists'>Please select the desired quantity.</span>");
+      $("#output1").val(0);
+      $('.submit-button').prop('disabled', true);
+    }
+    else {
+      save_item(item_id, pizza_id, quantity);
+    }
 
+  });
+
+  function save_item(item_id, pizza_id, quantity){
     $.ajax({
       type: "GET",
-      url: 'save_order',
-      data: {order_data: order_data, order_item_data: order_item_data, order_id: order_id},
+      url: 'save_item',
+      data: {item_id: item_id, pizza_id: pizza_id, quantity: quantity},
       success: function(data){
-        if (Number.isInteger(data)){
-          $("#output1").val(data);
-          if (data>0) {
-            $('.submit-button').prop('disabled', false);
-          }
-          else {
-            $('.submit-button').prop('disabled', true);
-            };
-          }
+        if (isNaN(data)){
+          elem.find('.response').html("<span class='not-exists'>"+ data +"</span>");
+          $('.submit-button').prop('disabled', true);
         }
+        else {
+          $("#output1").val(data);
+          elem.find('.response').html("");
+          $('.submit-button').prop('disabled', false);
+        }
+      }
     });
   };
 
@@ -80,6 +83,15 @@ $(document).ready(function(){
 
   function cloneMore(selector) {
     var newElement = $(selector).clone();
+    $.ajax({
+      url: 'create_item',
+      data: {old_item_id: newElement.attr('value')},
+      type: 'GET',
+      success: function(data){
+        newElement.attr('value', data);
+      }
+    });
+
     newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
         var name = $(this).attr('name')
         if(name) {
@@ -114,10 +126,16 @@ $(document).ready(function(){
       oi++;
     });
     if (oi > 1){
-      btn.attr({'id': 'item'})
+      btn.attr('id', 'item')
       elem = document.getElementById("item");
-      elem.parentNode.parentNode.parentNode.parentNode.removeChild(elem.parentNode.parentNode.parentNode);
-      save_order();
+      $.ajax({
+        url: 'delete_item',
+        data: {item_id: btn.parent().parent().parent().attr('value')},
+        type: 'GET',
+        success: function(data){
+          elem.parentNode.parentNode.parentNode.parentNode.removeChild(elem.parentNode.parentNode.parentNode);
+        }
+      });
     }
     return false;
 }

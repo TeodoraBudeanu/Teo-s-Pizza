@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db import IntegrityError
@@ -11,6 +11,10 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 
 
+def welcome(request):
+    return render(request, 'client/welcome.html')
+
+
 @method_decorator(login_required, name='dispatch')
 class OrderList(generics.ListAPIView):
     renderer_classes = [TemplateHTMLRenderer]
@@ -18,7 +22,7 @@ class OrderList(generics.ListAPIView):
     serializer_class = OrderSerializer
 
     def get_queryset(self):
-        return Order.objects.orders_for_client(self.request.user).filter(confirmed=1)
+        return Order.objects.filter(user=self.request.user).filter(status='P')
 
     def get(self, request):
         queryset = self.get_queryset()

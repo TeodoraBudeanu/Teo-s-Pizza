@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'order',
     'rest_framework',
+    'app',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'pizza.urls'
+ROOT_URLCONF = 'app.urls'
 
 TEMPLATES = [
     {
@@ -72,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'pizza.wsgi.application'
+WSGI_APPLICATION = 'app.wsgi.application'
 
 
 # Database

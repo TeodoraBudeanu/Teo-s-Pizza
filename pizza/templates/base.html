@@ -11,16 +11,16 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
   {% block styling %}
-    <link rel="stylesheet" href="/static/css/basestyle.css">
+    <link rel="stylesheet" href="{% static "css/basestyle.css" %}">
   {% endblock styling %}
 
 {% block scripts %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../../static/js/jquery.min.js"></script>
-<script type="text/javascript" src="../../static/js/underscore.js"></script>
-<script type="text/javascript" src="../../static/js/jsv.js"></script>
-<script type="text/javascript" src="../../static/js/jsonform.js"></script>
+<script type="text/javascript" src="{% static "js/jquery.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/underscore.js" %}"></script>
+<script type="text/javascript" src="{% static "js/jsv.js" %}"></script>
+<script type="text/javascript" src="{% static "js/jsonform.js" %}"></script>
 <script type="text/javascript">
 $(document).ready(function() {
          buttonElement = $(".navbutton");

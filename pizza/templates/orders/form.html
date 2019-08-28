@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
 {% load rest_framework %}
 
@@ -25,7 +26,7 @@
 
 {% block scripts %}
 {{ block.super }}
-<script type="text/javascript" src="../../static/js/order_form.js"></script>
+<script type="text/javascript" src="{% static "js/order_form.js" %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -33,12 +34,13 @@
 <form id ="orderForm" role="form">
   {% csrf_token %}
   {% render_field order_ser.address style=style_vert %}
+  <div id="address_response" class="response"></div>
   {% render_field order_ser.comment style=style_vert %}
   <br>
 </form>
 <form id ="orderItemsForm" role="form">
   {% for item in order_items_ser %}
-  <div class="form-row" name="order_item" >
+  <div class="form-row" name="order_item" value="{{ item.id.value }}">
     <div class="form-row">
       <div class="form-group col-md-10 mb-0 pizza" >
         {% render_field item.pizza_type style=style_hor %}

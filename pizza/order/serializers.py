@@ -1,11 +1,5 @@
 from rest_framework import serializers
-from .models import Pizza, Order, OrderItem
-
-
-class PizzaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Pizza
-        fields = '__all__'
+from .models import Order, OrderItem
 
 
 class OrderItemSerializer(serializers.ModelSerializer):

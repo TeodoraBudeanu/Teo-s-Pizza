@@ -1,24 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from pizza.models import Pizza
 # Create your models here.
-
-
-class Pizza(models.Model):
-    name = models.CharField(max_length=30)
-    description = models.TextField()
-    price = models.IntegerField()
-    img_url = models.CharField(max_length=50, default="bg1.jpg")
-    stock = models.IntegerField(default='0')
-
-    class Meta:
-        ordering = ['name']
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse('pizza_details', args=[self.id])
+ORDER_STATUS_CHOICES = (
+    ('O', 'Open'),
+    ('C', 'Confirmed'),
+    ('P', 'Paid'),
+)
 
 
 class OrdersQuerySet(models.QuerySet):
@@ -31,8 +20,8 @@ class Order(models.Model):
     address = models.CharField(max_length=30, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     date = models.DateField(auto_now_add=True)
-    confirmed = models.BooleanField(default=False)
-    paid = models.BooleanField(default=False)
+    status = models.CharField(max_length=1, default='O',
+                              choices=ORDER_STATUS_CHOICES)
     objects = OrdersQuerySet.as_manager()
 
     class Meta:
@@ -52,6 +41,6 @@ class Order(models.Model):
 class OrderItem(models.Model):
     pizza_type = models.ForeignKey(Pizza, on_delete=models.CASCADE, blank=True,
                                    null=True)
-    quantity = models.IntegerField(default='0')
+    quantity = models.IntegerField(default=0)
     order = models.ForeignKey(Order, related_name='order_items',
                               on_delete=models.CASCADE)
