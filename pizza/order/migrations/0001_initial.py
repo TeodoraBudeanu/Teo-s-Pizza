@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('address', models.CharField(blank=True, max_length=30, null=True)),
                 ('comment', models.TextField(blank=True, null=True)),
-                ('date', models.DateField(auto_now_add=True)),
+                ('date', models.DateTimeField(auto_now_add=True)),
                 ('confirmed', models.BooleanField(default=False)),
                 ('paid', models.BooleanField(default=False)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
