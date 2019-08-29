@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block title %}
   Order summary
@@ -11,20 +12,7 @@
 
 {% block styling %}
 {{ block.super }}
-<style>
-  .container   {
-    margin-top: 150px;
-    font-family: "Chalkduster";
-    font-size: 150%;
-    max-width:750px;
-    background: rgba(255, 255, 255, 0.3);
-  }
-
-  .col-sm-6 {
-    background: rgba(255, 255, 255, 0.3)
-  }
-
-  </style>
+<link rel="stylesheet" href="{% static  "css/confirmation.css"%}">
 {% endblock styling %}
 
 {% block content %}

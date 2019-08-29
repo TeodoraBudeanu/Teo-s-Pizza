@@ -8,22 +8,12 @@
 
 {% block styling %}
 {{ block.super }}
-  <link rel="stylesheet" href="{% static "css/loginpagestyle.css" %}">
-    <style>
-      body {
-        padding-top: 200px;
-        padding-bottom: 20px;
-      }
-
-      #create {
-        text-color: white; !important
-      }
-    </style>
+  <link rel="stylesheet" href="{% static "css/login.css" %}">
 {% endblock styling %}
 
 {% block content %}
-
-  <form role="form" action="{% url 'client_login' %}" method="post">
+<div id="container1" class="container">
+  <form id="myForm" role="form" action="{% url 'client_login' %}" method="post">
     {% csrf_token %}
 
     {{ form | crispy }}
@@ -32,5 +22,5 @@
     <a id="create"  class="btn btn-primary" name="button" href="{% url 'new_user' %}">Create new account</a>
 
   </form>
-
+</div>
   {% endblock %}

@@ -1,0 +1,31 @@
+body {
+  background: url(/static/img/{{ pizza.img_url }}) no-repeat center center fixed;
+  text-align: justify;
+}
+
+#container2 {
+  margin-top: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 80px;
+  width: 1000px;
+  font-family: "Chalkduster";
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 50px;
+}
+
+h1 {
+  font-size: 50px;
+}
+
+h4 {
+  font-size: 30px;
+}
+
+p {
+  font-size: 20px;
+}
+
+.price {
+  color: tomato;
+}

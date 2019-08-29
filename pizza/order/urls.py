@@ -11,5 +11,6 @@ urlpatterns = [
             name="order_details"),
     re_path(r'^confirm_order$', ConfirmOrder.as_view(), name="confirm_order"),
     re_path(r'^check_total$', CheckTotal.as_view(), name="check_total"),
+    re_path(r'history$', OrderList.as_view(), name='history'),
 
 ]

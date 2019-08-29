@@ -1,37 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block styling %}
 {{ block.super }}
-<style media="screen">
-
-  .container{
-    margin-top: 150px;
-    padding: 80px;
-    width: 1000px;
-    font-family: "Chalkduster";
-  }
-
-  .container-bg {
-    background: rgba(255, 255, 255, 0.3);
-  }
-
-  h1 {
-    font-size: 50px;
-  }
-
-  h4 {
-    font-size: 30px;
-  }
-
-  p {
-    font-size: 20px;
-  }
-
-  .price{
-    color: tomato;
-  }
-</style>
-
+  <link rel="stylesheet" href="{% static "css/error.css" %}">
 {% endblock styling %}
 
 {% block title %}
@@ -39,12 +11,10 @@
 {% endblock title %}
 
 {% block content %}
-<div class="container-fluid">
-  <h1>Oops! Something went wrong!</h1>
-  <h2>{{ text }}</h2>
+  <div class="container-fluid">
+    <h1>Oops! Something went wrong!</h1>
+    <h2>{{ text }}</h2>
 
-</div>
+  </div>
 
-
-
-  {% endblock %}
+{% endblock %}

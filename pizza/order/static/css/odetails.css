@@ -1,0 +1,19 @@
+#container3   {
+  margin-top: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 30px;
+  font-family: "Chalkduster";
+  font-size: 150%;
+  width:750px;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 50px;
+  color: black;
+  overflow: visible;
+}
+
+.col-sm-6 {
+  background: rgba(255, 255, 255, 0.4);
+  color: black;
+  z-index: 3;
+}

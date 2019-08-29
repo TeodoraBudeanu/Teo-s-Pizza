@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block styling %}
+{{ block.super }}
+  <link rel="stylesheet" href="{% static "css/details.css" %}">
+{% endblock styling %}
+
+{% block title %}
+  {{ pizza.name }}
+{% endblock title %}
+
+{% block content %}
+  <div id="container2">
+    <div class="row">
+      <h1>  {{ pizza.name }}</h1><br>
+    </div>
+    <div class="row">
+      <p>{{ pizza.description }}</p>
+    </div>
+    <div class="row">
+      <h1 class="price">Price: {{ pizza.price }} &euro;</h1>
+    </div>
+  </div>
+{% endblock %}

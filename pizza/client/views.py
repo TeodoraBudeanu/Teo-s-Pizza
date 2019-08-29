@@ -1,32 +1,14 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import JsonResponse
-from django.utils.decorators import method_decorator
-from order.models import Order
-from order.serializers import OrderSerializer
 from rest_framework import generics
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 
 
 def welcome(request):
-    return render(request, 'client/welcome.html')
-
-
-@method_decorator(login_required, name='dispatch')
-class OrderList(generics.ListAPIView):
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'client/home.html'
-    serializer_class = OrderSerializer
-
-    def get_queryset(self):
-        return Order.objects.filter(user=self.request.user).filter(status='P')
-
-    def get(self, request):
-        queryset = self.get_queryset()
-        return Response({'orders': queryset})
+    return render(request, 'welcome.html')
 
 
 class CheckUsername(generics.RetrieveAPIView):
@@ -51,7 +33,7 @@ class CheckEmail(generics.RetrieveAPIView):
 
 class CreateNewUser(generics.ListCreateAPIView):
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'client/create_new_user.html'
+    template_name = 'create_new_user.html'
 
     def get(self, request):
         return Response()

@@ -8,7 +8,7 @@ from rest_framework import status
 
 class PizzaDetails(generics.RetrieveAPIView):
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'pizza/details.html'
+    template_name = 'details.html'
     serializer_class = PizzaSerializer
     queryset = Pizza.objects.all()
 

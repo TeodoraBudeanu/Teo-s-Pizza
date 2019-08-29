@@ -1,0 +1,30 @@
+body {
+  padding-top: 200px;
+  padding-bottom: 20px;
+  text-align: left;
+}
+
+#container1 {
+  padding: 50px;
+  font-family: "Chalkduster";
+  font-size: 150%;
+  width:500px;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 25px;
+}
+
+h1 {
+  font-size: 50px;
+}
+
+h4 {
+  font-size: 30px;
+}
+
+p {
+  font-size: 20px;
+}
+
+#create {
+  color: white;
+}

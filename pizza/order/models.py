@@ -2,12 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from pizza.models import Pizza
+import datetime
 # Create your models here.
 ORDER_STATUS_CHOICES = (
     ('O', 'Open'),
     ('C', 'Confirmed'),
     ('P', 'Paid'),
+    ('D', 'Delivered')
 )
+DICT_CHOICES = dict(ORDER_STATUS_CHOICES)
 
 
 class OrdersQuerySet(models.QuerySet):
@@ -19,7 +22,7 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     address = models.CharField(max_length=30, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=1, default='O',
                               choices=ORDER_STATUS_CHOICES)
     objects = OrdersQuerySet.as_manager()
@@ -28,7 +31,8 @@ class Order(models.Model):
         ordering = ['-id']
 
     def __str__(self):
-        return "Order {} - {}".format(self.id, self.date)
+        return "Date: {} | Status: {}".format(self.date,
+                                              DICT_CHOICES[self.status])
 
     def get_amount(self):
         return sum([Pizza.objects.get(pk=ol.pizza_type.id).price * ol.quantity

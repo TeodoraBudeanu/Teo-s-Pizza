@@ -13,7 +13,7 @@ from rest_framework.response import Response
 @method_decorator(login_required, name='dispatch')
 class PlaceOrder(generics.RetrieveAPIView):
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'orders/form.html'
+    template_name = 'form.html'
     serializer_class = OrderSerializer
     style_vert = {'template_pack': 'rest_framework/vertical/'}
     style_hor = {'template_pack': 'rest_framework/inline/'}
@@ -38,7 +38,6 @@ class PlaceOrder(generics.RetrieveAPIView):
         oi_query = OrderItem.objects.filter(order=order)
         for item in oi_query:
             order_items_ser.append(OrderItemSerializer(item))
-        import pdb; pdb.set_trace()
         return Response({'order_ser': order_ser, 'order_items_ser':
                         order_items_ser, 'order': order, 'style_vert':
                         self.style_vert, 'style_hor': self.style_hor})
@@ -59,7 +58,7 @@ class SaveOrder(generics.GenericAPIView):
 @method_decorator(login_required, name='dispatch')
 class ConfirmOrder(generics.GenericAPIView):
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = "orders/confirmation.html"
+    template_name = "confirmation.html"
     queryset = Order.objects.all()
 
     def get(self, request, format=None):
@@ -130,7 +129,7 @@ class CheckTotal(generics.GenericAPIView):
 @method_decorator(login_required, name='dispatch')
 class OrderDetails(generics.RetrieveAPIView):
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'orders/details.html'
+    template_name = 'odetails.html'
     serializer_class = OrderSerializer
     queryset = Order.objects.all()
 
@@ -147,3 +146,17 @@ class OrderDetails(generics.RetrieveAPIView):
         text = "We couldn't find the Order you requested."
         return Response({'text': text}, template_name='error.html',
                         status=status.HTTP_404_NOT_FOUND)
+
+
+@method_decorator(login_required, name='dispatch')
+class OrderList(generics.ListAPIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'history.html'
+    serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user).filter(status='P')
+
+    def get(self, request):
+        queryset = self.get_queryset()
+        return Response({'orders': queryset})

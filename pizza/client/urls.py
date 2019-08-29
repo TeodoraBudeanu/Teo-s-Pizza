@@ -5,9 +5,8 @@ from .views import *
 
 urlpatterns = [
     re_path(r'^$', welcome, name="welcome"),
-    re_path(r'home$', OrderList.as_view(), name='client_home'),
     re_path(r'login$', LoginView.as_view(
-            template_name="client/login_form.html"), name='client_login'),
+            template_name="login_form.html"), name='client_login'),
     re_path(r'logout$', LogoutView.as_view(), name="client_logout"),
     re_path(r'new_user$', CreateNewUser.as_view(), name="new_user"),
     re_path(r'check_username$', CheckUsername.as_view(),

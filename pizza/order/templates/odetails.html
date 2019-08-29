@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
 
 {% block title %}
@@ -7,24 +8,14 @@
 
 {% block styling %}
 {{ block.super }}
-
-<style>
-  .container   {
-    margin-top: 150px;
-    font-family: "Chalkduster";
-    font-size: 150%;
-    max-width:750px;
-    background: rgba(255, 255, 255, 0.3);
-  }
-
-  .col-sm-6 {
-    background: rgba(255, 255, 255, 0.3)
-  }
-  </style>
+<link rel="stylesheet" href="{% static "css/odetails.css" %}">
 {% endblock styling %}
 
 {% block content %}
+<div id="container3">
+
 <h1>Order details</h1><br>
+
   <div class="form-row">
     <div class="col-sm-6 table-bordered">Amount</div>
     <div class="col-sm-6 table-bordered">{{ order.get_amount }} &euro;</div>
@@ -57,4 +48,5 @@
   </div>
   {% endfor %}
 <br><br><br>
+</div>
 {% endblock %}
