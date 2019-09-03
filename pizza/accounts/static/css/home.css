@@ -44,6 +44,11 @@ video {
   width: 100%;
 }
 
+.pizza {
+  width: 30%;
+  height: 100%;
+}
+
 p {
   font-size: 15px;
 }

@@ -1,5 +1,4 @@
 body {
-  background: url(/static/img/{{ pizza.img_url }}) no-repeat center center fixed;
   text-align: justify;
 }
 

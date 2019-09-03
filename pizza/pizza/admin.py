@@ -5,5 +5,5 @@ from .models import Pizza
 
 @admin.register(Pizza)
 class PizzaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description', 'price', 'stock', 'img_url')
-    list_editable = ('name', 'description', 'price', 'stock', 'img_url')
+    list_display = ('id', 'name', 'description', 'price', 'stock', 'image')
+    list_editable = ('name', 'description', 'price', 'stock', 'image')

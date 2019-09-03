@@ -6,7 +6,7 @@ class Pizza(models.Model):
     name = models.CharField(max_length=30)
     description = models.TextField()
     price = models.IntegerField()
-    img_url = models.CharField(max_length=50, default="bg1.jpg")
+    image = models.ImageField(upload_to='images/', null=True)
     stock = models.IntegerField(default=0)
 
     class Meta:

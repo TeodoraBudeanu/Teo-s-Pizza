@@ -3,15 +3,17 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from .forms import EmailForm
+from pizza.models import Pizza
 
 
 class Home(GenericAPIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = "home.html"
+    pizza_list = Pizza.objects.all()
 
     def get(self, request):
         form = EmailForm()
-        return Response({'form': form})
+        return Response({'form': form, 'pizza_list': self.pizza_list})
 
     def post(self, request):
         form = EmailForm(request.data)
@@ -23,4 +25,4 @@ class Home(GenericAPIView):
                       ['teo.budeanu@gmail.com'])
             text = "Your email has been sent."
             return Response({'text': text})
-        return Response({'form_with_errors': form})
+        return Response({'form_with_errors': form, 'pizza_list': self.pizza_list})

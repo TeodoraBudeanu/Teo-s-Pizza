@@ -27,7 +27,11 @@
 <title>{% block title %}{% endblock %}</title>
 </head>
 
+{% if pizza %}
 <body>
+{% else %}
+<body>
+{% endif %}
 <nav class="navbar transparent navbar-fixed-top">
   <div class="navbar-header">
     <a id="brandBtn" class="navbutton navbar-brand" href="{% url 'home' %}">Teo's Pizza</a>
