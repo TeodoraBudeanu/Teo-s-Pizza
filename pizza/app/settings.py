@@ -38,12 +38,47 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'pizza',
-    'client',
     'crispy_forms',
     'order',
     'rest_framework',
     'app',
+    'accounts',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
 ]
+
+SOCIALACCOUNT_PROVIDERS = \
+    {'facebook':
+     {'METHOD': 'oauth2',
+      'SCOPE': ['email', 'public_profile', 'user_friends'],
+      'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+      'FIELDS': [
+          'id',
+          'email',
+          'name',
+          'first_name',
+          'last_name',
+          'verified',
+          'locale',
+          'timezone',
+          'link',
+          'gender',
+          'updated_time'],
+      'EXCHANGE_TOKEN': True,
+      'LOCALE_FUNC': lambda request: 'kr_KR',
+      'VERIFIED_EMAIL': False,
+      'VERSION': 'v2.4'}}
+
+SOCIAL_AUTH_FACEBOOK_KEY = '228989548021344'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = 'b85ad15cf7e1da791cb604ce36e977c2Reset' # app key
+
+ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_USERNAME_REQURIED=True
+
+SITE_ID = 'teospizza'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -60,7 +95,10 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "templates")],
+        'DIRS': [
+            os.path.join(BASE_DIR, "templates"),
+            os.path.join(BASE_DIR, 'accounts', 'templates')
+            ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -68,6 +106,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
             ],
         },
     },
@@ -105,6 +144,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -124,11 +170,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-LOGIN_REDIRECT_URL = "welcome"
-LOGOUT_REDIRECT_URL = "welcome"
-LOGIN_URL = "client_login"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, 'accounts', 'templates')
+]
+LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "home"
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+EMAIL_HOST_PASSWORD = 'algotech'
+EMAIL_HOST_USER = 'teo'
+EMAIL_PORT = 8000
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+ACCOUNT_ADAPTER = "accounts.adapters.AccountAdapter"
+ACCOUNT_SIGNUP_FORM_CLASS = "accounts.forms.SignupForm"
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,

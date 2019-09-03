@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  Welcome to Teo's Pizza!
+{% endblock title %}
+
+{% block styling %}
+{{ block.super }}
+  <link rel="stylesheet" href="{% static "css/home.css" %}">
+{% endblock styling %}
+
+
+{% block content %}
+<body id="body1">
+  <div id="S1"><video src="{% static "video/promo.mp4" %}" controls>
+    </video>
+  <div class="icon-wrapper"><a href="#S2" id="icon" class="fas fa-chevron-circle-down fa-5x"></a>
+  </div>
+  </div>
+  <section id="S2">
+    <h1>Welcome to Teo's Pizza!</h1><br><br>
+    <h4>At Teo's Pizza, we aim to make delicious wood fired pizza that is true to the inspirational Italian cuisine!</h4>
+
+    <h4>For order details and food delivery, please do not hesitate to <a href="#contact">contact</a> us.</h4>
+  </section>
+
+  <section id="contact">
+    <h1 id="contacth1">CONTACT</h1>
+    <div class="row">
+      <div id="address" class="column">
+        <span class="fas fa-map-marker-alt fa-2x"></span>
+        <p> Str. Iugoslaviei, nr.25, Cluj, Cluj-Napoca</p>
+      </div>
+      <div class="column">
+        <p><span class="fas fa-phone-square-alt fa-lg"></span> 023 45 45 45</p>
+        <p><span class="fas fa-envelope fa-lg"></span> contact@teospizza.com</p>
+      </div>
+    </div>
+    <div class="row">
+      <div id="googleMap" class="column">
+        <div><span class=""></span>
+        </div>
+        <div id="map"></div>
+      </div>
+      {% if text %}
+      <div id="emailForm" class="column">
+        <p>{{ text }}</p>
+      </div>
+      {% elif form_with_errors %}
+      <div class="column">
+        <form id="emailForm" action="home" method="post">
+          {% csrf_token %}
+          {{ form_with_errors.as_p }}
+          <button id="emailBtn" class="btn btn-success" type="submit" name="button"> Send email </button>
+        </form>
+      </div>
+      {% else %}
+      <div class="column">
+        <form id="emailForm" action="home" method="post">
+          {% csrf_token %}
+          <p>First name:</p>
+          {{ form.first_name }}
+          <p>Last Name:</p>
+          {{ form.last_name }}
+          <p>Email:</p>
+          {{ form.email }}
+          <p>Subject:</p>
+          {{ form.subject }}
+          <p>Message:</p>
+          {{ form.message }}<br>
+          <button id="emailBtn" class="btn btn-success" type="submit" name="button"> Send email </button>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+
+    </section>
+</body>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "js/home.js" %}"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDlXHzxQNd3lns18nMb58Vt89CAsbhQZaw&callback=initMap"></script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "account/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Account Inactive" %}{% endblock %}
+
+{% block styling %}
+{{ block.super }}
+  <link rel="stylesheet" href="{% static "css/signup.css" %}">
+{% endblock styling %}
+
+{% block content %}
+<div id="container1">
+<h1>{% trans "Account Inactive" %}</h1>
+
+<p>{% trans "This account is inactive." %}</p>
+</div>
+{% endblock %}

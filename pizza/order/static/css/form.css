@@ -4,7 +4,10 @@
   font-family: "Chalkduster";
   font-size: 150%;
   max-width:750px;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.55);
   border-radius: 25px;
+}
 
+.btn {
+  border-radius: 20px;
 }

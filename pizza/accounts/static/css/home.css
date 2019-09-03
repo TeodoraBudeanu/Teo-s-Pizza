@@ -1,0 +1,57 @@
+#body1 {
+  font-family: "Chalkduster";
+  margin-top: 10%;
+}
+
+section {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  padding: 30px;
+  font-family: "Chalkduster";
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 25px;
+}
+
+video {
+  width: 100%;
+  height: auto;
+}
+
+#icon {
+  color: black
+}
+
+.icon-wrapper {
+  margin-top: 20px;
+}
+
+#icon:hover {
+  color: white;
+  text-decoration: none;
+}
+
+.row {
+  margin-top: 10px;
+}
+
+.column {
+  float: left;
+  width: 50%;
+}
+
+#map {
+  height: 400px;
+  width: 100%;
+}
+
+p {
+  font-size: 15px;
+}
+
+#contacth1 {
+  margin-bottom: 30px;
+}
+
+input {
+  width: 70%;
+}

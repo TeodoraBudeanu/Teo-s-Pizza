@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block title %}
+  Log In
+{% endblock %}
+
+{% block styling %}
+{{ block.super }}
+  <link rel="stylesheet" href="{% static "css/login.css" %}">
+{% endblock styling %}
+
+{% block content %}
+<div id="container1" class="container">
+
+<h1>{% trans "Log In" %}</h1>
+<br>
+{% get_providers as socialaccount_providers %}
+
+{% if socialaccount_providers %}
+
+<div class="socialaccount_ballot">
+
+  <div class="socialaccount_providers">
+    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+  </div>
+<br>
+</div>
+{% blocktrans with site.name as site_name %}
+<p>Or, log in with your {{ site_name }} account.</p>
+{% endblocktrans %}
+
+
+{% include "socialaccount/snippets/login_extra.html" %}
+
+{% else %}
+{% blocktrans with site.name as site_name %}
+<p>Log in with your {{ site_name }} account.</p>
+{% endblocktrans %}
+{% endif %}
+
+<form class="login" method="POST" action="{% url 'account_login' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <button id="signInBtn" class="primaryAction btn-success" type="submit">Log in</button>
+  <br>
+  <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Reset Password" %}</a>
+  <br>
+
+</form>
+<br>
+<p>Don't have an account? <a href="{{ signup_url }}">Sign up</a> </p>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+body {
+  padding-top: 100px;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+#container1 {
+  padding: 50px;
+  font-family: "Chalkduster";
+  font-size: 150%;
+  width:500px;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 25px;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+}
+
+h1 {
+  font-size: 50px;
+}
+
+p {
+  font-size: 20px;
+}
