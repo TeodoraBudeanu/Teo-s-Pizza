@@ -1,23 +1,23 @@
 from django import forms
-from .models import Profile
+from django.contrib.auth.models import User
 
 
 class SignupForm(forms.ModelForm):
+
+    phone = forms.CharField(max_length=10, required=True)
+
     class Meta:
-        model = Profile
-        fields = ('first_name', 'last_name', 'phone')
+        model = User
+        fields = ('first_name', 'last_name', 'email')
 
     def signup(self, request, user):
         # Save your user
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
+        user.email = self.cleaned_data['email']
         user.save()
-
-        # Save your profile
-        profile = Profile()
-        profile.user = user
-        profile.phone = self.cleaned_data['phone']
-        profile.save()
+        user.account.phone = self.cleaned_data['phone']
+        user.save()
 
 
 class EmailForm(forms.Form):

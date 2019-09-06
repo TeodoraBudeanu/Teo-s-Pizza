@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from pizza.models import Pizza
-import datetime
 # Create your models here.
 ORDER_STATUS_CHOICES = (
     ('O', 'Open'),

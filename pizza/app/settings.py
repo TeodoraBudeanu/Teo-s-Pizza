@@ -73,12 +73,13 @@ SOCIALACCOUNT_PROVIDERS = \
       'VERSION': 'v2.4'}}
 
 SOCIAL_AUTH_FACEBOOK_KEY = '228989548021344'  # App ID
-SOCIAL_AUTH_FACEBOOK_SECRET = 'b85ad15cf7e1da791cb604ce36e977c2Reset'  # app key
+SOCIAL_AUTH_FACEBOOK_SECRET = 'b85ad15cf7e1da791cb604ce36e977c2Reset'
+# app key
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQURIED = True
 
-SITE_ID = 'teospizza'
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -96,8 +97,11 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, "templates"),
-            os.path.join(BASE_DIR, 'accounts', 'templates')
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'accounts', 'templates', 'account'),
+            os.path.join(BASE_DIR, 'accounts', 'templates', 'socialaccount',
+                         'snippets'),
+            os.path.join(BASE_DIR, 'accounts', 'templates'),
             ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -171,11 +175,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, 'static'),
     os.path.join(BASE_DIR, 'accounts', 'templates')
 ]
+
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
+
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 EMAIL_HOST_PASSWORD = 'algotech'
@@ -190,7 +196,7 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny'
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',

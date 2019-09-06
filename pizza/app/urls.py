@@ -19,10 +19,11 @@ from django.urls import path, re_path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    re_path(r'^', include('allauth.urls')),
     re_path(r'^', include('accounts.urls')),
     re_path(r'^order/', include('order.urls')),
     re_path(r'^pizza/', include('pizza.urls')),
     re_path(r'^api-auth/', include('rest_framework.urls')),
-    re_path(r'^accounts/', include('allauth.urls')),
+    re_path(r'^accounts/', include('accounts.urls')),
 
 ]

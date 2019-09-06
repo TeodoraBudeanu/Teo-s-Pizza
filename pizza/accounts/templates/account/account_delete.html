@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Sign Out" %}{% endblock %}
+
+{% block styling %}
+{{ block.super }}
+  <link rel="stylesheet" href="{% static "css/logout.css" %}">
+{% endblock styling %}
+
+{% block content %}
+<div id="container1" class="container">
+  <h1>{% trans "Delete Account" %}</h1>
+  <br>
+  <p>{% trans 'Are you sure you want to delete your account? Deleting your account is permanent and will remove all content including orders and profile settings.  %}</p>
+  <button id="delete" type="submit">{% trans 'Delete account' %}</button>
+
+</div>
+
+{% endblock %}

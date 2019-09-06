@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  My account
+{% endblock %}
+
+{% block styling %}
+{{ block.super }}
+  <link rel="stylesheet" href="{% static "css/account.css" %}">
+{% endblock styling %}
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "js/account.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+<div id="container1">
+    <h1 id="title">Account Details</h1>
+
+    <table id="user-account" style="width:100%">
+
+      <tr>
+        <td id="Name" class="attribute">
+          <p class="alignleft">Name</p>
+          <p class="alignright">{{ user.first_name }} {{user.last_name}}
+          <button class="far fa-edit btn" data-toggle="collapse" data-target="#name-collapse"></button></p>
+        </td>
+        <div style="clear: both;"></div>
+      </tr>
+
+      <tr>
+        <td id="name-collapse" class="panel-collapse collapse attribute-edit">
+          <form action="{% url 'account' %}" method="post">
+            {% csrf_token %}
+            <label for="first_name">First Name</label>
+            <input id="first_name" type="text" name="first_name" value="{{ user.first_name }}"><br>
+            <label for="last_name">Last Name</label>
+            <input id="last_name" type="text" name="last_name" value="{{ user.last_name }}"><br><br>
+            <button type="button" class="btn btn-light cancel" name="button">Cancel</button>
+            <button type="submit" class="btn btn-success confirm" name="button">Confirm</button>
+          </form>
+        </td>
+        <div style="clear: both;"></div>
+      </tr>
+
+      <tr>
+        <td id="email" class="attribute">
+        <p class="alignleft">Email address</p>
+        <p class="alignright">{{ user.email }}
+        <button class="far fa-edit btn" data-toggle="collapse" data-target="#email-collapse"></button></p>
+        </td>
+        <div style="clear: both;"></div>
+      </tr>
+
+      <tr>
+        <td id="email-collapse" class="panel-collapse collapse attribute-edit">
+          <form action="{% url 'account' %}" method="post">
+            {% csrf_token %}
+            <label for="email">Email</label>
+            <input id="first_name" type="text" name="first_name" value="{{ user.email }}"><br>
+            <button type="button" class="btn btn-light cancel" name="button">Cancel</button>
+            <button type="submit" class="btn btn-success confirm" name="button">Confirm</button>
+          </form>
+        </td>
+        <div style="clear: both;"></div>
+      </tr>
+
+      <tr>
+        <td id="phone" class="attribute">
+        <p class="alignleft">Phone Number</p>
+        <p class="alignright">{{ user.account.phone }}
+        <button class="far fa-edit btn" data-toggle="collapse" data-target="#phone-collapse"></button></p>
+        </td>
+        <div style="clear: both;"></div>
+      </tr>
+
+      <tr>
+        <td id="phone-collapse" class="panel-collapse collapse attribute-edit">
+          <form action="{% url 'account' %}" method="post">
+            {% csrf_token %}
+            <label for="phone">Phone Number</label>
+            <input id="phone" type="text" name="first_name" value="{{ user.account.phone }}"><br>
+            <button type="button" class="btn btn-light cancel" name="button">Cancel</button>
+            <button type="submit" class="btn btn-success confirm" name="button">Confirm</button>
+          </form>
+        </td>
+        <div style="clear: both;"></div>
+      </tr>
+
+      <tr>
+        <td id="password" class="attribute">
+        <p class="alignleft">Password</p>
+        <p class="alignright">
+        <a href="{% url 'account_change_password' %}" class="btn btn-primary">Change Password</a></p>
+        </td>
+        <div style="clear: both;"></div>
+      </tr>
+
+    </table>
+
+    <button id="delete-account" class="btn btn-danger" type="button" name="button">Delete Account</button>
+</div>
+
+{% endblock %}
