@@ -80,47 +80,7 @@ class ConfirmOrder(generics.GenericAPIView):
         return redirect(order)
 
 
-@method_decorator(login_required, name='dispatch')
-class SaveItem(generics.GenericAPIView):
-
-    def get(self, request):
-        item_id = request.GET.get('item_id')
-        pizza_id = request.GET.get('pizza_id')
-        quantity = request.GET.get('quantity')
-        item = get_object_or_404(OrderItem, pk=item_id)
-        pizza = get_object_or_404(Pizza, pk=pizza_id)
-        if pizza.stock >= int(quantity):
-            item.pizza_type = Pizza.objects.get(pk=pizza_id)
-            item.quantity = quantity
-            item.save()
-            total = item.order.get_amount()
-            return JsonResponse(total, safe=False)
-        return JsonResponse('There are only {} {} left in stock.'.format(
-                            pizza.stock, pizza.name), safe=False)
-
-
-@method_decorator(login_required, name='dispatch')
-class CreateItem(generics.GenericAPIView):
-
-    def get(self, request):
-        item_id = request.GET.get('old_item_id')
-        old_item = OrderItem.objects.get(pk=item_id)
-        item = OrderItem(order=old_item.order)
-        item.save()
-        return JsonResponse(item.id, safe=False)
-
-
-@method_decorator(login_required, name='dispatch')
-class DeleteItem(generics.GenericAPIView):
-
-    def get(self, request):
-        item_id = request.GET.get('item_id')
-        OrderItem.objects.filter(pk=item_id).delete()
-        return JsonResponse(1, safe=False)
-
-
 class CheckTotal(generics.GenericAPIView):
-
     def get(self, request):
         order_id = request.GET.get('order_id')
         order = get_object_or_404(Order, pk=order_id)
@@ -161,3 +121,43 @@ class OrderList(generics.ListAPIView):
     def get(self, request):
         queryset = self.get_queryset()
         return Response({'orders': queryset})
+
+
+@method_decorator(login_required, name='dispatch')
+class SaveItem(generics.GenericAPIView):
+
+    def get(self, request):
+        item_id = request.GET.get('item_id')
+        pizza_id = request.GET.get('pizza_id')
+        quantity = request.GET.get('quantity')
+        item = get_object_or_404(OrderItem, pk=item_id)
+        pizza = get_object_or_404(Pizza, pk=pizza_id)
+        if pizza.stock >= int(quantity):
+            item.pizza_type = Pizza.objects.get(pk=pizza_id)
+            item.quantity = quantity
+            item.save()
+            total = item.order.get_amount()
+            return JsonResponse(total, safe=False)
+        return JsonResponse('There are only {} {} left in stock.'.format(
+                            pizza.stock, pizza.name), safe=False,
+                            status=400)
+
+
+@method_decorator(login_required, name='dispatch')
+class CreateItem(generics.GenericAPIView):
+
+    def get(self, request):
+        item_id = request.GET.get('old_item_id')
+        old_item = OrderItem.objects.get(pk=item_id)
+        item = OrderItem(order=old_item.order)
+        item.save()
+        return JsonResponse(item.id, safe=False)
+
+
+@method_decorator(login_required, name='dispatch')
+class DeleteItem(generics.GenericAPIView):
+
+    def get(self, request):
+        item_id = request.GET.get('item_id')
+        OrderItem.objects.filter(pk=item_id).delete()
+        return JsonResponse(1, safe=False)

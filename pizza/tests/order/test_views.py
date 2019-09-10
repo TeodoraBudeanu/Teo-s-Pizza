@@ -124,3 +124,73 @@ class OrderViewsLoggedInUserTest(TestCase):
         self.response = self.client.post('/order/confirm_order')
         self.order.refresh_from_db()
         self.assertEquals(self.order.order_items.get().pizza_type.stock, 5)
+
+
+class OrderItemViewsAnonymousUserTest(TestCase):
+    # python3 manage.py
+    # test tests.order.test_views.OrderItemViewsAnonymousUserTest
+    def test_user_is_redirected_to_login_when_tries_to_save_item(self):
+        response = self.client.get('/order/save_item')
+        self.assertEquals(302, response.status_code)
+        self.assertEquals('/accounts/login/?next=/order/save_item',
+                          response.url)
+
+
+class OrderItemViewsLoggedInUserTest(TestCase):
+    # python3 manage.py
+    # test tests.order.test_views.OrderItemViewsLoggedInUserTest
+    fixtures = ['regular_user.json']
+
+    def setUp(self):
+        self.response = self.client.force_login(User.objects.get())
+        self.order = Order.objects.create(user=User.objects.get(),
+                                          date=datetime.date(2019, 9, 9))
+        self.pizza = Pizza.objects.create(name="Pizza Carbonara", price="10",
+                                          description="Description", stock=10)
+        self.order_item = self.order.order_items.get()
+
+    def test_order_item_is_saved_when_new_pizza_id_is_provided(self):
+        self.order_item.quantity = 0
+        self.response = self.client.get('/order/save_item',
+                                        {'item_id': 1, 'pizza_id': 1,
+                                         'quantity': 0})
+        self.order_item.refresh_from_db()
+        self.assertEquals(1, self.order_item.pizza_type.id)
+
+    def test_order_item_is_saved_when_new_quantity_is_provided(self):
+        self.order_item.pizza_type = Pizza.objects.get()
+        self.order_item.quantity = 0
+        self.response = self.client.get('/order/save_item',
+                                        {'item_id': 1, 'pizza_id': 1,
+                                         'quantity': 3})
+        self.order_item.refresh_from_db()
+        self.assertEquals(3, self.order_item.quantity)
+
+    def test_when_non_existent_id_is_provided_save_item_raises_404(self):
+        self.response = self.client.get('/order/save_item',
+                                        {'item_id': 2, 'pizza_id': 1,
+                                         'quantity': 3})
+        self.assertEquals(404, self.response.status_code)
+
+    def test_when_non_existent_pizza_id_is_provided_save_item_raises_404(self):
+        self.response = self.client.get('/order/save_item',
+                                        {'item_id': 1, 'pizza_id': 2,
+                                         'quantity': 3})
+        self.assertEquals(404, self.response.status_code)
+
+    def test_when_provided_quantity_is_higher_than_stock_raises_400(self):
+        self.response = self.client.get('/order/save_item',
+                                        {'item_id': 1, 'pizza_id': 1,
+                                         'quantity': 20})
+        self.assertEquals(400, self.response.status_code)
+
+    def test_create_item(self):
+        self.assertEquals(1, self.order.order_items.all().count())
+        self.response = self.client.get('/order/create_item',
+                                        {'old_item_id': 1})
+        self.assertEquals(2, self.order.order_items.all().count())
+
+    def test_delete_item(self):
+        self.assertEquals(1, self.order.order_items.all().count())
+        self.response = self.client.get('/order/delete_item', {'item_id': 1})
+        self.assertEquals(0, self.order.order_items.all().count())
