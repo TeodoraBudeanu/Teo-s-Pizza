@@ -125,7 +125,10 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': 'pizzadb',
+        'TEST': {
+            'NAME': 'testdb',
+        },
     }
 }
 
@@ -207,3 +210,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ],
 }
+
+SILENCED_SYSTEM_CHECKS = [
+    'fields.W161',
+]

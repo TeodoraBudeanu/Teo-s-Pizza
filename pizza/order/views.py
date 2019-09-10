@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, get_object_or_404
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from .models import Order, OrderItem, Pizza
 from .serializers import OrderSerializer, OrderItemSerializer
@@ -8,6 +9,7 @@ from rest_framework import status
 from rest_framework import generics
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
+
 
 # Create your views here.
 @method_decorator(login_required, name='dispatch')
@@ -27,15 +29,13 @@ class PlaceOrder(generics.RetrieveAPIView):
         else:
             order = Order(user=self.request.user)
             order.save()
-            order_item = OrderItem(order=order)
-            order_item.save()
         return order
 
     def get(self, request, *args, **kwargs):
         order = self.get_object()
         order_ser = OrderSerializer(order)
         order_items_ser = []
-        oi_query = OrderItem.objects.filter(order=order)
+        oi_query = order.order_items.all()
         for item in oi_query:
             order_items_ser.append(OrderItemSerializer(item))
         return Response({'order_ser': order_ser, 'order_items_ser':
@@ -65,14 +65,15 @@ class ConfirmOrder(generics.GenericAPIView):
         order = Order.objects.filter(status='O').get(user=request.user)
         order.status = 'C'
         order.save()
-        order_items = OrderItem.objects.filter(order=order)
+        order_items = order.order_items.all()
         return Response({'order': order, 'orderItems': order_items})
 
     def post(self, request, format=None):
         order = Order.objects.filter(status='C').get(user=request.user)
         order.status = 'P'
+        order.date = timezone.now().date()
         order.save()
-        order_items = OrderItem.objects.filter(order=order)
+        order_items = order.order_items.all()
         for item in order_items:
             item.pizza_type.stock -= item.quantity
             item.pizza_type.save()
@@ -141,7 +142,7 @@ class OrderDetails(generics.RetrieveAPIView):
                 text = "You are not authorized to access this Order"
                 return Response({'text': text}, template_name='error.html',
                                 status=status.HTTP_404_NOT_FOUND)
-            order_items = OrderItem.objects.all().filter(order=order)
+            order_items = order.order_items.all()
             return Response({'order': order, 'order_items': order_items})
         text = "We couldn't find the Order you requested."
         return Response({'text': text}, template_name='error.html',
