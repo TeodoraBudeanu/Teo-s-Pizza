@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, get_object_or_404
 from django.http import JsonResponse
+from django.core.exceptions import PermissionDenied
 from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
@@ -99,9 +100,7 @@ class OrderDetails(generics.RetrieveAPIView):
         if(queryset.filter(pk=pk).count()):
             order = queryset.get(pk=pk)
             if not request.user == order.user:
-                text = "You are not authorized to access this Order"
-                return Response({'text': text}, template_name='error.html',
-                                status=status.HTTP_404_NOT_FOUND)
+                raise PermissionDenied
             order_items = order.order_items.all()
             return Response({'order': order, 'order_items': order_items})
         text = "We couldn't find the Order you requested."

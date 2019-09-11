@@ -1,7 +1,7 @@
 from django.test import TestCase
 from unittest import skip
 from django.utils import timezone
-from order.models import Order, OrderItem, Pizza
+from order.models import Order, Pizza
 from django.contrib.auth.models import User
 import datetime
 
@@ -38,7 +38,10 @@ class OrderViewsLoggedInUserTest(TestCase):
     fixtures = ['regular_user.json']
 
     def setUp(self):
-        self.response = self.client.force_login(User.objects.get())
+        self.user = User.objects.get()
+        self.user.account.phone = "0111111111"
+        self.user.save()
+        self.response = self.client.force_login(self.user)
         self.order = Order.objects.create(user=User.objects.get(),
                                           date=datetime.date(2019, 9, 9))
         self.pizza = Pizza.objects.create(name="Pizza Carbonara", price="10",
@@ -125,11 +128,67 @@ class OrderViewsLoggedInUserTest(TestCase):
         self.order.refresh_from_db()
         self.assertEquals(self.order.order_items.get().pizza_type.stock, 5)
 
+    def test_check_total_returns_order_amount(self):
+        self.response = self.client.get('/order/check_total', {'order_id': 1})
+        self.assertEquals('50', self.response.content.decode("utf-8"))
+
+    def test_when_non_existent_order_id_is_provided_check_total_raises_404(self):
+        self.response = self.client.get('/order/check_total', {'order_id': 2})
+        self.assertEquals(404, self.response.status_code)
+
+    def test_order_details(self):
+        self.response = self.client.get('/order/order_details/1/')
+        self.assertEquals(200, self.response.status_code)
+        self.assertTemplateUsed(self.response, 'odetails.html')
+
+    def test_order_details_returns_order(self):
+        self.response = self.client.get('/order/order_details/1/')
+        self.assertEquals(1, self.response.context['order'].id)
+
+    def test_order_details_raises_PermissionDenied_to_user(self):
+        user = User(username="bobby", first_name="Bob", last_name="Dylan",
+                    email="bob@dylan.com", password="123456", pk="2")
+        user.save()
+        user.account.phone = '0222222222'
+        user.save()
+        self.order.status = "P"
+        self.order.save()
+        self.response = self.client.force_login(user)
+        self.response = self.client.get('/order/order_details/1/')
+        self.assertEquals(403, self.response.status_code)
+
+    def test_when_non_existent_order_id_is_provided_order_details_raises_404(self):
+        self.response = self.client.get('/order/order_details/2/')
+        self.assertEquals(404, self.response.status_code)
+
+    def test_order_list(self):
+        self.response = self.client.get('/order/history')
+        self.assertEquals(200, self.response.status_code)
+        self.assertTemplateUsed(self.response, 'history.html')
+
+    def test_order_list_returns_list(self):
+        self.order.status = "P"
+        self.order.save()
+        self.response = self.client.get('/order/history')
+        self.assertEquals(1, len(self.response.context['orders']))
+
 
 class OrderItemViewsAnonymousUserTest(TestCase):
     # python3 manage.py
     # test tests.order.test_views.OrderItemViewsAnonymousUserTest
     def test_user_is_redirected_to_login_when_tries_to_save_item(self):
+        response = self.client.get('/order/save_item')
+        self.assertEquals(302, response.status_code)
+        self.assertEquals('/accounts/login/?next=/order/save_item',
+                          response.url)
+
+    def test_user_is_redirected_to_login_when_tries_to_create_item(self):
+        response = self.client.get('/order/save_item')
+        self.assertEquals(302, response.status_code)
+        self.assertEquals('/accounts/login/?next=/order/save_item',
+                          response.url)
+
+    def test_user_is_redirected_to_login_when_tries_to_delete_item(self):
         response = self.client.get('/order/save_item')
         self.assertEquals(302, response.status_code)
         self.assertEquals('/accounts/login/?next=/order/save_item',
