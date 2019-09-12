@@ -1,4 +1,4 @@
-from django.core.mail import send_mail
+from django.core import mail
 from django.contrib.auth.models import User
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework import generics
@@ -24,8 +24,8 @@ class HomeView(generics.GenericAPIView):
             message = form.cleaned_data["first_name"] + " " +\
                 form.cleaned_data["last_name"]\
                 + ":" + form.cleaned_data["message"]
-            send_mail(request.data["subject"], message, request.data["email"],
-                      ['teo.budeanu@gmail.com'])
+            mail.send_mail(request.data["subject"], message,
+                           request.data["email"], ['teo.budeanu@gmail.com'])
             text = "Your email has been sent."
             return Response({'text': text})
         return Response({'form_with_errors': form,
