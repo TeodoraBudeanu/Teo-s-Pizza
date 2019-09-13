@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core import mail
 from unittest import skip
+from accounts.forms import SignupForm
 
 
 class AnonymousUserTest(TestCase):
@@ -27,7 +28,9 @@ class UserLoggedInTest(TestCase):
     fixtures = ['superuser.json', 'regular_user.json']
 
     def setUp(self):
-        self.response = self.client.force_login(User.objects.get(pk=2))
+        self.user = User.objects.get(pk=2)
+        self.response = self.client.login(username='johnny',
+                                          password='loginpass0')
 
     def test_account_view(self):
         self.response = self.client.get('/account')
@@ -71,7 +74,6 @@ class UserLoggedInTest(TestCase):
         user.refresh_from_db()
         new_password = user.password
         self.assertFalse(old_password == new_password)
-
 # user password is not updated in db
 
     @skip("Logout redirects to 'Are you sure?' page. How to pass by that?")
@@ -83,3 +85,23 @@ class UserLoggedInTest(TestCase):
         self.response = self.client.get('/logout/')
         self.assertTrue(self.response.status_code, 200)
         self.assertTemplateUsed(self.response, 'account/logout.html')
+
+    def test_signup_page(self):
+        self.client.logout()
+        self.response = self.client.get('/accounts/signup')
+        self.assertTrue(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, 'account_signup.html')
+
+    def test_signup_page_post(self):
+        self.client.logout()
+        self.response = self.client.post('/accounts/signup',
+                                         {'username': 'teo',
+                                          'first_name': 'teo',
+                                          'last_name': 'bud',
+                                          'email': 'teo.bud@mail.com',
+                                          'phone': '0333333333',
+                                          'password1': 'loginpass2',
+                                          'password2': 'loginpass2'})
+        self.assertEquals(self.response.status_code, 302)
+        self.assertEquals(self.response.url, '/accounts/')
+        self.assertEquals(User.objects.last().username, 'teo')

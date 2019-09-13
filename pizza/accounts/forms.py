@@ -19,6 +19,12 @@ class SignupForm(forms.ModelForm):
         user.account.phone = self.cleaned_data['phone']
         user.save()
 
+    def __init__(self, *args, **kwargs):
+        super(SignupForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+        self.fields['email'].required = True
+
 
 class EmailForm(forms.Form):
     first_name = forms.CharField(max_length=100, required=True)
