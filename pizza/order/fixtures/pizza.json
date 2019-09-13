@@ -6,8 +6,8 @@
     "fields": {
         "name": "Pizza Carbonara",
         "description": "Descripton",
-        "price": "10",
-        "stock": "10",
+        "price": 10,
+        "stock": 10
     }
   }
 ]

@@ -3,13 +3,13 @@ from pizza.models import Pizza
 
 
 class PizzaTest(TestCase):
+    fixtures = ['pizza.json']
+
     @classmethod
     def setUpTestData(cls):
-        cls.pizza = Pizza.objects.create(name='Pizza Carbonara',
-                                         description='description',
-                                         price=10, stock=10)
+        cls.pizza = Pizza.objects.get(pk=1)
 
-    def test_str_returns_date_and_status(self):
+    def test_str_returns_name(self):
         self.assertEquals('Pizza Carbonara', self.pizza.__str__())
 
     def test_get_absolute_url(self):

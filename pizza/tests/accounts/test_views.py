@@ -2,12 +2,11 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core import mail
 from unittest import skip
-from accounts.forms import SignupForm
 
 
 class AnonymousUserTest(TestCase):
 
-    fixtures = ['regular_user.json', 'inactive_user.json']
+    fixtures = ['users.json']
 
     def test_home_page(self):
         response = self.client.get('')
@@ -25,7 +24,7 @@ class AnonymousUserTest(TestCase):
 
 class UserLoggedInTest(TestCase):
 
-    fixtures = ['superuser.json', 'regular_user.json']
+    fixtures = ['users.json']
 
     def setUp(self):
         self.user = User.objects.get(pk=2)
@@ -99,7 +98,7 @@ class UserLoggedInTest(TestCase):
                                           'first_name': 'teo',
                                           'last_name': 'bud',
                                           'email': 'teo.bud@mail.com',
-                                          'phone': '0333333333',
+                                          'phone': '0111111111',
                                           'password1': 'loginpass2',
                                           'password2': 'loginpass2'})
         self.assertEquals(self.response.status_code, 302)

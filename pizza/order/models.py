@@ -53,10 +53,13 @@ class OrderItem(models.Model):
 
 @receiver(post_save, sender=Order)
 def create_order_item(sender, instance, created, **kwargs):
-    if created:
-        OrderItem.objects.create(order=instance)
+    if instance.order_items.all().count() == 0:
+        if (kwargs.get('created', True) and not kwargs.get('raw', False)):
+            OrderItem.objects.create(order=instance)
 
 
 @receiver(post_save, sender=Order)
 def save_order_item(sender, instance, **kwargs):
-    instance.order_items.first().save()
+    if instance.order_items.all().count() == 0:
+        if not kwargs.get('raw', False):
+            instance.order_items.first().save()

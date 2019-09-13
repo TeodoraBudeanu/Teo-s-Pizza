@@ -2,7 +2,6 @@ from django.test import TestCase
 from django.utils import timezone
 from order.models import Order, Pizza
 from django.contrib.auth.models import User
-import datetime
 
 
 class OrderViewsAnonymousUserTest(TestCase):
@@ -34,21 +33,12 @@ class OrderViewsAnonymousUserTest(TestCase):
 
 class OrderViewsLoggedInUserTest(TestCase):
     # python3 manage.py test tests.order.test_views.OrderViewsLoggedInUserTest
-    fixtures = ['regular_user.json']
+    fixtures = ['users.json', 'orders.json', 'pizza.json']
 
     def setUp(self):
-        self.user = User.objects.get()
-        self.user.account.phone = "0111111111"
-        self.user.save()
+        self.user = User.objects.get(pk=2)
         self.response = self.client.force_login(self.user)
-        self.order = Order.objects.create(user=User.objects.get(),
-                                          date=datetime.date(2019, 9, 9))
-        self.pizza = Pizza.objects.create(name="Pizza Carbonara", price="10",
-                                          description="Description", stock=10)
-        self.order_item = self.order.order_items.get()
-        self.order_item.pizza_type = Pizza.objects.get()
-        self.order_item.quantity = 5
-        self.order_item.save()
+        self.order = Order.objects.get(pk=1)
 
     def test_place_order(self):
         self.response = self.client.get('/order/place_order')
@@ -65,11 +55,12 @@ class OrderViewsLoggedInUserTest(TestCase):
         # if an Open/Confirmed order exists
         self.order.status = 'C'
         self.order.save()
-        self.assertEquals(Order.objects.get().status, 'C')
+        self.assertEquals(Order.objects.get(pk=1).status, 'C')
         self.response = self.client.get('/order/place_order')
-        self.assertEquals(Order.objects.get().status, 'O')
+        self.assertEquals(Order.objects.get(pk=1).status, 'O')
 
     def test_save_order(self):
+        self.assertFalse(self.order.address == 'test_address')
         self.response = self.client.get('/order/save_order',
                                         {'order_id': 1,
                                          'address': 'test_address'})
@@ -125,7 +116,7 @@ class OrderViewsLoggedInUserTest(TestCase):
         self.order.save()
         self.response = self.client.post('/order/confirm_order')
         self.order.refresh_from_db()
-        self.assertEquals(self.order.order_items.get().pizza_type.stock, 5)
+        self.assertEquals(self.order.order_items.get(pk=1).pizza_type.stock, 5)
 
     def test_check_total_returns_order_amount(self):
         self.response = self.client.get('/order/check_total', {'order_id': 1})
@@ -145,11 +136,7 @@ class OrderViewsLoggedInUserTest(TestCase):
         self.assertEquals(self.response.context['order'].id, 1)
 
     def test_order_details_raises_PermissionDenied_to_user(self):
-        user = User(username="bobby", first_name="Bob", last_name="Dylan",
-                    email="bob@dylan.com", password="123456", pk="2")
-        user.save()
-        user.account.phone = '0222222222'
-        user.save()
+        user = User.objects.get(pk=3)
         self.order.status = "P"
         self.order.save()
         self.response = self.client.force_login(user)
@@ -197,15 +184,13 @@ class OrderItemViewsAnonymousUserTest(TestCase):
 class OrderItemViewsLoggedInUserTest(TestCase):
     # python3 manage.py
     # test tests.order.test_views.OrderItemViewsLoggedInUserTest
-    fixtures = ['regular_user.json']
+    fixtures = ['users.json', 'orders.json', 'pizza.json']
 
     def setUp(self):
-        self.response = self.client.force_login(User.objects.get())
-        self.order = Order.objects.create(user=User.objects.get(),
-                                          date=datetime.date(2019, 9, 9))
-        self.pizza = Pizza.objects.create(name="Pizza Carbonara", price="10",
-                                          description="Description", stock=10)
-        self.order_item = self.order.order_items.get()
+        self.user = User.objects.get(pk=2)
+        self.response = self.client.force_login(self.user)
+        self.order = Order.objects.get(pk=1)
+        self.order_item = self.order.order_items.get(pk=1)
 
     def test_order_item_is_saved_when_new_pizza_id_is_provided(self):
         self.order_item.quantity = 0
@@ -216,7 +201,7 @@ class OrderItemViewsLoggedInUserTest(TestCase):
         self.assertEquals(self.order_item.pizza_type.id, 1)
 
     def test_order_item_is_saved_when_new_quantity_is_provided(self):
-        self.order_item.pizza_type = Pizza.objects.get()
+        self.order_item.pizza_type = Pizza.objects.get(pk=1)
         self.order_item.quantity = 0
         self.response = self.client.get('/order/save_item',
                                         {'item_id': 1, 'pizza_id': 1,

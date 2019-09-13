@@ -1,0 +1,238 @@
+[
+  {"model": "contenttypes.contenttype",
+    "fields":
+    {"app_label": "admin", "model": "logentry"}
+  },
+  {"model": "contenttypes.contenttype",
+    "fields": {"app_label": "auth", "model": "permission"}
+    },
+    {"model": "contenttypes.contenttype",
+      "fields": {"app_label": "auth", "model": "group"}
+    },
+    {"model": "contenttypes.contenttype",
+      "fields": {"app_label": "auth", "model": "user"}
+    },
+    {"model": "contenttypes.contenttype",
+      "fields": {"app_label": "contenttypes", "model": "contenttype"}
+    },
+    {"model": "contenttypes.contenttype",
+      "fields": {"app_label": "sessions", "model": "session"}
+    },
+    {"model": "contenttypes.contenttype",
+      "fields": {"app_label": "pizza", "model": "pizza"}
+    },
+    {"model": "contenttypes.contenttype",
+      "fields": {"app_label": "order", "model": "order"}
+    },
+    {"model": "contenttypes.contenttype",
+      "fields": {"app_label": "order", "model": "orderitem"}
+    },
+    {"model": "contenttypes.contenttype",
+      "fields": {"app_label": "accounts", "model": "account"}
+    },
+    {"model": "contenttypes.contenttype",
+      "fields": {"app_label": "sites", "model": "site"}
+    }, {"model": "contenttypes.contenttype",
+      "fields": {"app_label": "account", "model": "emailaddress"}
+    },
+    {"model": "contenttypes.contenttype",
+      "fields": {"app_label": "account", "model": "emailconfirmation"}
+    },
+    {"model": "contenttypes.contenttype",
+      "fields": {"app_label": "socialaccount", "model": "socialaccount"}
+    },
+    {"model": "contenttypes.contenttype",
+      "fields": {"app_label": "socialaccount", "model": "socialapp"}
+    },
+    {"model": "contenttypes.contenttype",
+      "fields": {"app_label": "socialaccount", "model": "socialtoken"}
+    },
+    {"model": "sessions.session", "pk": "01qw8z6sz555l76cnne5n0l559jbiklr",
+      "fields": {"session_data": "MTkxNDc0NzlkZDlmYzQxOGM1NjYwZmZjNTkwMzc1ODhmOTJiODQzNDp7Il9hdXRoX3VzZXJfaWQiOiIxNyIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImFsbGF1dGguYWNjb3VudC5hdXRoX2JhY2tlbmRzLkF1dGhlbnRpY2F0aW9uQmFja2VuZCIsIl9hdXRoX3VzZXJfaGFzaCI6IjVlODJhNzRiODhkZmMxYWJhMTI5MjVkNzgyN2JiNDU0MGY0ZGExYTcifQ==", "expire_date": "2019-09-26T08:06:46.547Z"}},
+    {"model": "pizza.pizza", "pk": 1,
+      "fields": {
+        "name": "Pizza Carnivora",
+        "description": "The history of pizza begins in antiquity, when various ancient cultures produced basic flatbreads with several toppings. A precursor of pizza was probably the focaccia, a flat bread known to the Romans as panis focacius, to which toppings were then added. Modern pizza developed in Naples when tomato was added to the focaccia in the late 18th century. The word pizza was first documented in 997 A.D. in Gaeta and successively in different parts of Central and Southern Italy. Pizza was mainly eaten in Italy and by emigrants from there. This changed after World War II, when Allied troops stationed in Italy came to enjoy pizza along with other Italian foods.",
+        "price": 9,
+        "image": "pizza3.jpg",
+        "stock": 100}
+      },
+    {"model": "pizza.pizza", "pk": 2,
+      "fields": {
+        "name": "Pizza Capricciosa",
+        "description": "The pizza Capricciosa is the most classic Italian pizza and present in all menus of pizzerias. The undecided  customers always end up ordering the pizza capricious. Rich, abundant and imaginative, this pizza always manages to please everyone. Its name comes definitely looking with which it has, \"Capricious\" for its look and for the combination of ingredients, ham, the artichokes, the mushrooms and black olives. Composed with the same ingredients of pizza 4 seasons, it is the provision of them that makes these two different pizzas.",
+        "price": 7,
+        "image": "pizza2.jpg",
+        "stock": 95}
+      },
+    {"model": "pizza.pizza", "pk": 3,
+      "fields": {
+        "name": "Pizza Calzone",
+        "description": "In Italy, as of the 1960s, calzones were popularly believed to be the most efficient type of pizza for home delivery. This popular credence had some scientific ground as the folded nature of the calzone results in a lower surface-to-volume ratio than a traditional pizza resulting in better heat retention during the journey from the pizzeria to the buyer's home. This results in a calzone being delivered warmer than pizza, all other things being equal.",
+        "price": 5,
+        "image": "pizza1.jpg",
+        "stock": 91}
+    },
+    {"model": "order.orderitem", "pk": 6,
+      "fields": {
+        "pizza_type": null,
+        "quantity": 0,
+        "order": 1}
+    },
+    {"model": "sites.site",
+      "fields": {"domain": "example.com", "name": "example.com"}},
+    {"model": "socialaccount.socialapp", "pk": 1,
+      "fields": {"provider": "facebook", "name": "Facebook", "client_id": "228989548021344", "secret": "b85ad15cf7e1da791cb604ce36e977c2Reset", "key": "", "sites": [["example.com"]]}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can add log entry", "content_type": ["admin", "logentry"], "codename": "add_logentry"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can change log entry", "content_type": ["admin", "logentry"], "codename": "change_logentry"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can delete log entry", "content_type": ["admin", "logentry"], "codename": "delete_logentry"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can view log entry", "content_type": ["admin", "logentry"], "codename": "view_logentry"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can add permission", "content_type": ["auth", "permission"], "codename": "add_permission"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can change permission", "content_type": ["auth", "permission"], "codename": "change_permission"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can delete permission", "content_type": ["auth", "permission"], "codename": "delete_permission"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can view permission", "content_type": ["auth", "permission"], "codename": "view_permission"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can add group", "content_type": ["auth", "group"], "codename": "add_group"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can change group", "content_type": ["auth", "group"], "codename": "change_group"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can delete group", "content_type": ["auth", "group"], "codename": "delete_group"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can view group", "content_type": ["auth", "group"], "codename": "view_group"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can add user", "content_type": ["auth", "user"], "codename": "add_user"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can change user", "content_type": ["auth", "user"], "codename": "change_user"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can delete user", "content_type": ["auth", "user"], "codename": "delete_user"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can view user", "content_type": ["auth", "user"], "codename": "view_user"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can add content type", "content_type": ["contenttypes", "contenttype"], "codename": "add_contenttype"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can change content type", "content_type": ["contenttypes", "contenttype"], "codename": "change_contenttype"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can delete content type", "content_type": ["contenttypes", "contenttype"], "codename": "delete_contenttype"}},
+    {"model": "auth.permission",
+      "fields": {"name": "Can view content type", "content_type": ["contenttypes", "contenttype"], "codename": "view_contenttype"}},
+    {"model": "auth.permission", "fields": {"name": "Can add session", "content_type": ["sessions", "session"], "codename": "add_session"}},
+    {"model": "auth.permission", "fields": {"name": "Can change session", "content_type": ["sessions", "session"], "codename": "change_session"}},
+    {"model": "auth.permission", "fields": {"name": "Can delete session", "content_type": ["sessions", "session"], "codename": "delete_session"}}, {"model": "auth.permission", "fields": {"name": "Can view session", "content_type": ["sessions", "session"], "codename": "view_session"}}, {"model": "auth.permission", "fields": {"name": "Can add pizza", "content_type": ["pizza", "pizza"], "codename": "add_pizza"}},
+    {"model": "auth.permission", "fields": {"name": "Can change pizza", "content_type": ["pizza", "pizza"], "codename": "change_pizza"}},
+    {"model": "auth.permission", "fields": {"name": "Can delete pizza", "content_type": ["pizza", "pizza"], "codename": "delete_pizza"}},
+    {"model": "auth.permission", "fields": {"name": "Can view pizza", "content_type": ["pizza", "pizza"], "codename": "view_pizza"}},
+    {"model": "auth.permission", "fields": {"name": "Can add order", "content_type": ["order", "order"], "codename": "add_order"}},
+    {"model": "auth.permission", "fields": {"name": "Can change order", "content_type": ["order", "order"], "codename": "change_order"}},
+    {"model": "auth.permission", "fields": {"name": "Can delete order", "content_type": ["order", "order"], "codename": "delete_order"}},
+    {"model": "auth.permission", "fields": {"name": "Can view order", "content_type": ["order", "order"], "codename": "view_order"}},
+    {"model": "auth.permission", "fields": {"name": "Can add order item", "content_type": ["order", "orderitem"], "codename": "add_orderitem"}},
+    {"model": "auth.permission", "fields": {"name": "Can change order item", "content_type": ["order", "orderitem"], "codename": "change_orderitem"}},
+    {"model": "auth.permission", "fields": {"name": "Can delete order item", "content_type": ["order", "orderitem"], "codename": "delete_orderitem"}},
+    {"model": "auth.permission", "fields": {"name": "Can view order item", "content_type": ["order", "orderitem"], "codename": "view_orderitem"}},
+    {"model": "auth.permission", "fields": {"name": "Can add account", "content_type": ["accounts", "account"], "codename": "add_account"}},
+    {"model": "auth.permission", "fields": {"name": "Can change account", "content_type": ["accounts", "account"], "codename": "change_account"}},
+    {"model": "auth.permission", "fields": {"name": "Can delete account", "content_type": ["accounts", "account"], "codename": "delete_account"}},
+    {"model": "auth.permission", "fields": {"name": "Can view account", "content_type": ["accounts", "account"], "codename": "view_account"}},
+    {"model": "auth.permission", "fields": {"name": "Can add site", "content_type": ["sites", "site"], "codename": "add_site"}},
+    {"model": "auth.permission", "fields": {"name": "Can change site", "content_type": ["sites", "site"], "codename": "change_site"}},
+    {"model": "auth.permission", "fields": {"name": "Can delete site", "content_type": ["sites", "site"], "codename": "delete_site"}},
+    {"model": "auth.permission", "fields": {"name": "Can view site", "content_type": ["sites", "site"], "codename": "view_site"}},
+    {"model": "auth.permission", "fields": {"name": "Can add email address", "content_type": ["account", "emailaddress"], "codename": "add_emailaddress"}},
+    {"model": "auth.permission", "fields": {"name": "Can change email address", "content_type": ["account", "emailaddress"], "codename": "change_emailaddress"}},
+    {"model": "auth.permission", "fields": {"name": "Can delete email address", "content_type": ["account", "emailaddress"], "codename": "delete_emailaddress"}},
+    {"model": "auth.permission", "fields": {"name": "Can view email address", "content_type": ["account", "emailaddress"], "codename": "view_emailaddress"}},
+    {"model": "auth.permission", "fields": {"name": "Can add email confirmation", "content_type": ["account", "emailconfirmation"], "codename": "add_emailconfirmation"}},
+    {"model": "auth.permission", "fields": {"name": "Can change email confirmation", "content_type": ["account", "emailconfirmation"], "codename": "change_emailconfirmation"}},
+    {"model": "auth.permission", "fields": {"name": "Can delete email confirmation", "content_type": ["account", "emailconfirmation"], "codename": "delete_emailconfirmation"}},
+    {"model": "auth.permission", "fields": {"name": "Can view email confirmation", "content_type": ["account", "emailconfirmation"], "codename": "view_emailconfirmation"}},
+    {"model": "auth.permission", "fields": {"name": "Can add social account", "content_type": ["socialaccount", "socialaccount"], "codename": "add_socialaccount"}},
+    {"model": "auth.permission", "fields": {"name": "Can change social account", "content_type": ["socialaccount", "socialaccount"], "codename": "change_socialaccount"}},
+    {"model": "auth.permission", "fields": {"name": "Can delete social account", "content_type": ["socialaccount", "socialaccount"], "codename": "delete_socialaccount"}},
+    {"model": "auth.permission", "fields": {"name": "Can view social account", "content_type": ["socialaccount", "socialaccount"], "codename": "view_socialaccount"}},
+    {"model": "auth.permission", "fields": {"name": "Can add social application", "content_type": ["socialaccount", "socialapp"], "codename": "add_socialapp"}},
+    {"model": "auth.permission", "fields": {"name": "Can change social application", "content_type": ["socialaccount", "socialapp"], "codename": "change_socialapp"}},
+    {"model": "auth.permission", "fields": {"name": "Can delete social application", "content_type": ["socialaccount", "socialapp"], "codename": "delete_socialapp"}},
+    {"model": "auth.permission", "fields": {"name": "Can view social application", "content_type": ["socialaccount", "socialapp"], "codename": "view_socialapp"}},
+    {"model": "auth.permission", "fields": {"name": "Can add social application token", "content_type": ["socialaccount", "socialtoken"], "codename": "add_socialtoken"}},
+    {"model": "auth.permission", "fields": {"name": "Can change social application token", "content_type": ["socialaccount", "socialtoken"], "codename": "change_socialtoken"}},
+    {"model": "auth.permission", "fields": {"name": "Can delete social application token", "content_type": ["socialaccount", "socialtoken"], "codename": "delete_socialtoken"}},
+    {"model": "auth.permission", "fields": {"name": "Can view social application token", "content_type": ["socialaccount", "socialtoken"], "codename": "view_socialtoken"}},
+    {"model": "auth.user",
+      "fields": {
+        "password": "pbkdf2_sha256$150000$PMC1SAG7oeu5$m71TiaOcq8pboKn2GJF1WtvNQ5Bdf7eFu8AuT/cIpvM=",
+        "last_login": "2019-09-11T13:44:36.075Z",
+        "is_superuser": false,
+        "username": "teobudeanu",
+        "first_name": "Teo",
+        "last_name": "Budeanu",
+        "email": "teo.budeanu@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2019-09-05T14:24:39.956Z",
+        "groups": [],
+        "user_permissions": []
+        }
+      },
+    {"model": "auth.user",
+      "fields": {
+        "password": "pbkdf2_sha256$150000$2EHbzltr5Uj5$qYOud6Fjwf5dIg37efPTagsVyoKnWNpjRyXw87g9Ec4=",
+        "last_login": "2019-09-12T08:06:46.540Z",
+        "is_superuser": false,
+        "username": "teo",
+        "first_name": "t",
+        "last_name": "t",
+        "email": "teo.bud@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2019-09-12T08:06:46.135Z",
+        "groups": [],
+        "user_permissions": []
+        }
+        },
+    {"model": "order.order", "pk": 1,
+      "fields": {
+        "user": ["teobudeanu"],
+        "address": "yhg",
+        "comment": "",
+        "date": "2019-09-09",
+        "status": "O"
+        }
+      },
+    {"model": 
+      "accounts.account", "pk": 5,
+      "fields": {
+        "user": ["teobudeanu"],
+        "phone": "0777777777"
+        }
+      },
+    {"model": "accounts.account", "pk": 9,
+        "fields": {
+          "user": ["teo"],
+          "phone": "0111111111"
+          }
+        },
+    {"model": "account.emailaddress", "pk": 7,
+      "fields": {
+        "user": ["teobudeanu"],
+        "email": "teo.budeanu@gmail.com",
+        "verified": false,
+        "primary": true
+        }
+      },
+      {"model": "account.emailaddress", "pk": 10,
+        "fields": {
+          "user": ["teo"],
+          "email": "teo.bud@gmail.com",
+          "verified": false,
+          "primary": true
+    }
+  }
+]

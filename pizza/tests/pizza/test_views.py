@@ -5,11 +5,11 @@ from django.contrib.auth.models import User
 
 class PizzaViewsAnonymousUserTest(TestCase):
 
+    fixtures = ['pizza.json']
+
     @classmethod
     def setUpTestData(cls):
-        cls.pizza = Pizza.objects.create(name='Pizza Carbonara',
-                                         description='description',
-                                         price=10, stock=10)
+        cls.pizza = Pizza.objects.get(pk=1)
 
     def test_pizza_details(self):
         response = self.client.get('/pizza/details/1/')
@@ -22,16 +22,14 @@ class PizzaViewsAnonymousUserTest(TestCase):
 
 class PizzaViewsLoggedUserTest(TestCase):
 
-    fixtures = ['regular_user.json']
+    fixtures = ['users.json', 'pizza.json']
 
     @classmethod
     def setUpTestData(cls):
-        cls.pizza = Pizza.objects.create(name='Pizza Carbonara',
-                                         description='description',
-                                         price=10, stock=10)
+        cls.pizza = Pizza.objects.get(pk=1)
 
     def setUp(self):
-        self.response = self.client.force_login(User.objects.get())
+        self.response = self.client.force_login(User.objects.get(pk=2))
 
     def test_pizza_details(self):
         self.response = self.client.get('/pizza/details/1/')

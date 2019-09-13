@@ -1,0 +1,81 @@
+
+[
+  {
+    "pk": 1,
+    "model": "auth.user",
+    "fields": {
+      "username": "bob",
+      "first_name": "Bob",
+      "last_name": "Lennon",
+      "is_active": 0,
+      "is_superuser": 0,
+      "is_staff": 0,
+      "last_login": "2012-03-27 14:23:28",
+      "groups": [],
+      "user_permissions": [],
+      "password": "pbkdf2_sha256$150000$IxLe0taYhY9B$PzcUT2czl/gtQ4u9ZMIxrVLtvHvSOZyfYyeivGsOWtw=",
+      "email": "Bob@Lennon.com",
+      "date_joined": "2019-09-05 14:24:39"
+    }
+  },
+  {
+    "model": "accounts.account",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "phone": "0333333333"
+      }
+    },
+  {
+    "pk": 2,
+    "model": "auth.user",
+    "fields": {
+        "username": "johnny",
+        "first_name": "Johnny",
+        "last_name": "Michael",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": "2012-03-27 14:23:28",
+        "groups": [],
+        "user_permissions": [],
+        "password": "pbkdf2_sha256$150000$IxLe0taYhY9B$PzcUT2czl/gtQ4u9ZMIxrVLtvHvSOZyfYyeivGsOWtw=",
+        "email": "johnny.michael@gmail.com",
+        "date_joined": "2012-03-27 14:22:53"
+    }
+  },
+  {
+    "model": "accounts.account",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "phone": "055555555"
+    }
+  },
+  {
+    "pk": 3,
+    "model": "auth.user",
+    "fields": {
+        "username": "john",
+        "first_name": "John",
+        "last_name": "Lennon",
+        "is_active": true,
+        "is_superuser": true,
+        "is_staff": true,
+        "last_login": "2012-03-27 14:23:28",
+        "groups": [],
+        "user_permissions": [],
+        "password": "pbkdf2_sha256$150000$IxLe0taYhY9B$PzcUT2czl/gtQ4u9ZMIxrVLtvHvSOZyfYyeivGsOWtw=",
+        "email": "john.lennon@gmail.com",
+        "date_joined": "2012-03-27 14:22:53"
+    }
+  },
+  {
+    "model": "accounts.account",
+    "pk": 3,
+    "fields": {
+      "user": 3,
+      "phone": "0222222222"
+    }
+  }
+]

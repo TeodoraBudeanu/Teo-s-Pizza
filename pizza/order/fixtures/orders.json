@@ -1,0 +1,33 @@
+[
+  {
+    "model": "order.order",
+    "pk": 1,
+    "fields": {
+      "user": 2,
+      "address": "Address",
+      "comment": "",
+      "date": "2019-09-09",
+      "status": "O"
+    }
+  },
+  {
+    "model": "order.orderitem",
+    "pk": 1,
+    "fields": {
+      "pizza_type": 1,
+      "quantity": 5,
+      "order": 1
+    }
+  },
+  {
+  "model": "order.order",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "address": "Address",
+    "comment": "",
+    "date": "2019-09-09",
+    "status": "O"
+    }
+  }
+]
