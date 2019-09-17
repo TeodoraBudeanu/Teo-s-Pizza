@@ -59,26 +59,26 @@ class UserLoggedInTest(TestCase):
         self.assertEquals(self.response.status_code, 200)
         self.assertTemplateUsed(self.response, 'password_change.html')
 
-    @skip("Not passing - user password is not updated in db")
     def test_password_is_changed_by_user(self):
         user = User.objects.get(pk=2)
         old_password = user.password
         self.response = self.client.post('/accounts/password/change',
-                                         {'old_password': 'loginpass0',
-                                          'new_password1': 'newpass0',
-                                          'new_password2': 'newpass0'})
+                                         {'oldpassword': 'loginpass0',
+                                          'password1': 'newpass0',
+                                          'password2': 'newpass0'})
         self.client.logout()
         self.response = self.client.login(username='johnny',
-                                          password='loginpass0')
+                                          password='newpass0')
         user.refresh_from_db()
         new_password = user.password
         self.assertFalse(old_password == new_password)
-# user password is not updated in db
 
-    @skip("Logout redirects to 'Are you sure?' page. How to pass by that?")
-    def test_user_logout(self):
-        self.response = self.client.get('/logout/')  # =>> "Are you sure?" page
-        self.assertFalse(User.objects.get(pk=2).is_authenticated)
+    def test_logged_out_user_is_redirected_lo_login(self):
+        self.response = self.client.post('/logout/')
+        self.response = self.client.get('/order/place_order')
+        self.assertEquals(self.response.status_code, 302)
+        self.assertEquals(self.response.url,
+                          '/accounts/login/?next=/order/place_order')
 
     def test_logout_page(self):
         self.response = self.client.get('/logout/')

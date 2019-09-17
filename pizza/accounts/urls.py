@@ -3,7 +3,7 @@ from allauth.account import views
 from .views import HomeView, AccountView, CustomPasswordChangeView
 
 urlpatterns = [
-    re_path(r'login$', views.LoginView.as_view(template_name="login.html"),
+    re_path(r'login/', views.LoginView.as_view(template_name="login.html"),
             name='login'),
     re_path(r'logout$', views.LogoutView.as_view(template_name="logout.html"),
             name="logout"),

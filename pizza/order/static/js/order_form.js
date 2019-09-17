@@ -24,7 +24,6 @@ $(document).ready(function(){
   $(document).on('change', '#orderForm', function(){
     var address = $(this).find('input[name=address]').val();
     var comment = $(this).find('textarea[name=comment]').val();
-    var elem = $(this);
     if (address == ''){
       $('#address_response').html("<span class='not-exists'>Please type in your address.</span>");
       $('.submit-button').prop('disabled', true);
