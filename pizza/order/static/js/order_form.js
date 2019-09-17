@@ -22,10 +22,9 @@ $(document).ready(function(){
   }
 
   $(document).on('change', '#orderForm', function(){
-    address = $(this).find('input[name=address]').val();
-    comment = $(this).find('textarea[name=comment]').val();
-    console.log(address, comment);
-    elem = $(this);
+    var address = $(this).find('input[name=address]').val();
+    var comment = $(this).find('textarea[name=comment]').val();
+    var elem = $(this);
     if (address == ''){
       $('#address_response').html("<span class='not-exists'>Please type in your address.</span>");
       $('.submit-button').prop('disabled', true);
@@ -41,10 +40,10 @@ $(document).ready(function(){
   });
 
   $(document).on('change', 'div[name=order_item]', function(){
-    pizza_id = $(this).find(':selected').val();
-    quantity = $(this).find('input[name=quantity]').val();
-    elem = $(this);
-    item_id = elem.attr('value');
+    var pizza_id = $(this).find(':selected').val();
+    var quantity = $(this).find('input[name=quantity]').val();
+    var elem = $(this);
+    var item_id = elem.attr('value');
     if (quantity == '' || quantity <= 0){
       elem.find('.response').html("<span class='not-exists'>Please select the desired quantity.</span>");
       $("#output1").val(0);
@@ -127,7 +126,7 @@ $(document).ready(function(){
     });
     if (oi > 1){
       btn.attr('id', 'item')
-      elem = document.getElementById("item");
+      var elem = document.getElementById("item");
       $.ajax({
         url: 'delete_item',
         data: {item_id: btn.parent().parent().parent().attr('value')},

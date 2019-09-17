@@ -65,8 +65,13 @@ class ConfirmOrder(generics.GenericAPIView):
     def get(self, request, format=None):
         order = Order.objects.filter(status='O').get(user=request.user)
         order.status = 'C'
-        order.save()
         order_items = order.order_items.all()
+        if order.comment == "":
+            order.comment = "-"
+        order.save()
+        for item in order_items:
+            if item.pizza_type is None:
+                item.delete()
         return Response({'order': order, 'orderItems': order_items})
 
     def post(self, request, format=None):
