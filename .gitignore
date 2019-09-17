@@ -108,6 +108,7 @@ django/
 
 #DB
 pizza/db.sqlite3
+pizzadb
 
 *.DS_Store
 pizza/__pycache__/
